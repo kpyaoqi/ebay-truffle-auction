@@ -20,7 +20,7 @@ truffle unbox webpack
 
 然后打开./app/package.json进行修改
 
-```json
+```
 // 这个是我的
 {
   "name": "app",
@@ -53,7 +53,7 @@ npm install
 
 启动IPFS后，打开IPFS的UI前端http://localhost:5001/webui，修改配置文件并保存，然后重启IPFS
 
-```json
+```
 {
 	"API": {
 		"HTTPHeaders": {
