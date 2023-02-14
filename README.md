@@ -1,5 +1,7 @@
 # ebay_truffle
 
+声明：如有任何问题请联系wx：YQ-SmileATT
+
 这个项目主要是基于以太坊开发拍卖系统DApp，拍卖的原理类似于eBay，所以又可以叫做“去中心化eBay”项目.
 
 这个项目是根据[尚硅谷区块链项目硅谷拍卖系统](https://www.bilibili.com/video/BV1EJ411D7SL/)模仿做的，但是教程是很久之前的，用的版本都是好久之前的了.
