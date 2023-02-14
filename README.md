@@ -1,4 +1,4 @@
-# ebay_truffle
+# ebay-truffle
 
 声明：如有任何问题请联系wx：YQ-SmileATT
 
