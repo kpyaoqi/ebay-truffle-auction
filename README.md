@@ -51,7 +51,7 @@ npm install
 
 还要安装IPFS，[下载链接](https://dist.ipfs.tech/#kubo),我安装的版本是 kubo_v0.18.1
 
-启动IPFS后，打开IPFS的UI前端http://localhost:5001/webui，修改配置文件并保存，然后重启IPFS
+启动IPFS后，打开IPFS的[UI前端](http://localhost:5001/webui)，修改配置文件并保存，然后重启IPFS
 
 ```
 {
