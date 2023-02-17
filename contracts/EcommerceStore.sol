@@ -175,46 +175,49 @@ contract EcommerceStore {
 		return result;
 	}
 	
+
+
+	function finalizeAuction(uint _productId) public {
+		Product storage product = stores[productIdInStore[_productId]][_productId];
+		// 48 hours to reveal the bid
+		require(block.timestamp > product.auctionEndTime);
+		require(product.status == ProductStatus.Open);
+		require(product.highestBidder != msg.sender);
+		require(productIdInStore[_productId] != msg.sender);
+
+		if (product.highestBidder == 0x0000000000000000000000000000000000000000) {
+			product.status = ProductStatus.Unsold;
+		} else {
+			// Whoever finalizes the auction is the arbiter
+			Escrow escrow = (new Escrow){value:product.secondHighestBid}(_productId, product.highestBidder, productIdInStore[_productId], msg.sender);
+			productEscrow[_productId] = address(escrow);
+			product.status = ProductStatus.Sold;
+			// The bidder only pays the amount equivalent to second highest bidder
+			// Refund the difference
+			uint refund = product.highestBid - product.secondHighestBid;
+			payable(product.highestBidder).transfer(refund);
+		}
+	}
+
+	function escrowAddressForProduct(uint _productId) view public returns (address) {
+		return productEscrow[_productId];
+	}
+
+	function escrowInfo(uint _productId) view public returns (address, address, address, bool, uint, uint) {
+		return Escrow(productEscrow[_productId]).escrowInfo();
+	}
+
+	function releaseAmountToSeller(uint _productId) public {
+		Escrow(productEscrow[_productId]).releaseAmountToSeller();
+	}
+
+	function refundAmountToBuyer(uint _productId) public {
+		Escrow(productEscrow[_productId]).refundAmountToBuyer();
+	}
+
+	// 生成密钥
 	function keccak( string memory _amount, string memory _secret)pure  public returns (bytes32) {
 		bytes32 _bid=keccak256(abi.encode(_amount,_secret));
 		return _bid;
 	}
-
-	// function finalizeAuction(uint _productId) public {
-	// 	Product storage product = stores[productIdInStore[_productId]][_productId];
-	// 	// 48 hours to reveal the bid
-	// 	require(block.timestamp > product.auctionEndTime);
-	// 	require(product.status == ProductStatus.Open);
-	// 	require(product.highestBidder != msg.sender);
-	// 	require(productIdInStore[_productId] != msg.sender);
-
-	// 	if (product.totalBids == 0) {
-	// 		product.status = ProductStatus.Unsold;
-	// 	} else {
-	// 		// Whoever finalizes the auction is the arbiter
-	// 		Escrow escrow = (new Escrow){value:product.secondHighestBid}(_productId, product.highestBidder, productIdInStore[_productId], msg.sender);
-	// 		productEscrow[_productId] = address(escrow);
-	// 		product.status = ProductStatus.Sold;
-	// 		// The bidder only pays the amount equivalent to second highest bidder
-	// 		// Refund the difference
-	// 		uint refund = product.highestBid - product.secondHighestBid;
-	// 		payable(product.highestBidder).transfer(refund);
-	// 	}
-	// }
-
-	// function escrowAddressForProduct(uint _productId) view public returns (address) {
-	// 	return productEscrow[_productId];
-	// }
-
-	// function escrowInfo(uint _productId) view public returns (address, address, address, bool, uint, uint) {
-	// 	return Escrow(productEscrow[_productId]).escrowInfo();
-	// }
-
-	// function releaseAmountToSeller(uint _productId) public {
-	// 	Escrow(productEscrow[_productId]).releaseAmountToSeller(msg.sender);
-	// }
-
-	// function refundAmountToBuyer(uint _productId) public {
-	// 	Escrow(productEscrow[_productId]).refundAmountToBuyer(msg.sender);
-	// }
 }

@@ -19,7 +19,7 @@ web3.eth.getBalance(send2);
 EcommerceStore.deployed().then(function(i) {i.revealBid(1, web3.utils.toWei('2', 'ether'), 'h', {from: send1}).then(function(f) {console.log(f)})});
 EcommerceStore.deployed().then(function(i) {i.revealBid(1, web3.utils.toWei('3', 'ether'), 'h', {from: send2}).then(function(f) {console.log(f)})});
 
-EcommerceStore.deployed().then(function(i) {i.highestBidderInfo.call(1).then(function(f) {console.log(web3.utils.BN(f[1]).toString())})});
+EcommerceStore.deployed().then(function(i) {i.highestBidderInfo.call(1).then(function(f) {console.log(f[0],web3.utils.BN(f[1]).toString(),web3.utils.BN(f[2]).toString())})});
 
 1,0xe4254857ab7c9ad8addf1eda3e20ef8e4957120920e0f09fd00079b0cff650f2
 1,0x9c1a2bc909c956c211cd9fec7c637cf6d54d0a67ab7104b232010cdc2d6152b3

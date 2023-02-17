@@ -82,12 +82,19 @@ const App = {
       $("#product-price").html(this.web3.utils.fromWei(res[7], 'ether') + "ETH");
       $("#product-name").html(res[1]);
       $("#product-auction-end").html(displayEndHours(res[6]));
+      $("#revealing, #bidding, #finalize-auction, #escrow-info").hide();
       $("#product-id").val(res[0]);
       let currentTime = Math.round(new Date() / 1000);
-      if (currentTime < res[6]) {
+      if (res[8] == 1) {
+        $("#product-status").html("Product sold");
+      } else if (res[8] == 2) {
+        $("#product-status").html("Product was not sold");
+      } else if (currentTime < res[6]) {
         $("#bidding").show();
-      } else if (currentTime - (60) < res[6]) {
+      } else if (currentTime - (120) < res[6]) {
         $("#revealing").show();
+      }else {
+        $("#finalize-auction").show();
       }
     })
   },
@@ -95,7 +102,7 @@ const App = {
   // 出价
   bidProduct: async function (productId, sealedBid, sendAmount) {
     const { bid } = this.EcommerceStore.methods;
-    await bid(productId,sealedBid).send({value:this.web3.utils.toWei(sendAmount,'ether'),from: this.account, gas: 999999}).then(res => {
+    await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account, gas: 999999 }).then(res => {
       $("#msg").html("Your bid has been successfully submitted!");
       $("#msg").show();
       console.log(res);
@@ -103,20 +110,35 @@ const App = {
   },
 
   // 揭示报价
-  revealProduct: async function (productId,amount, secretText) {
+  revealProduct: async function (productId, amount, secretText) {
     const { revealBid } = this.EcommerceStore.methods;
-    amount=this.web3.utils.toWei(amount,'ether');
-    await revealBid(productId,amount, secretText).send({from: this.account, gas: 999999}).then(res => {
+    let amounts = this.web3.utils.toWei(amount, 'ether');
+    await revealBid(productId, amounts, secretText).send({ from: this.account, gas: 999999 }).then(res => {
       $("#msg").show();
       $("#msg").html("Your bid has been successfully revealed!");
       console.log(res);
     })
   },
 
+  // 托管
+  finalizeProduct: async function (productId) {
+    const { finalizeAuction } = this.EcommerceStore.methods;
+    await finalizeAuction(productId).send({ from: this.account, gas: 999999 }).then(res => {
+      $("#msg").show();
+        $("#msg").html("The auction has been finalized and winner declared.");
+        console.log(res);
+        location.reload();
+    }).catch(err=>{
+      console.log(err);
+      $("#msg").show();
+      $("#msg").html("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
+    })
+  },
+
   // 获取密文
   keccakWithamountAndsecretText: async function (amount, secretText) {
     const { keccak } = this.EcommerceStore.methods;
-    amount=this.web3.utils.toWei(amount,'ether');
+    amount = this.web3.utils.toWei(amount, 'ether');
     var sealedBid = await keccak(amount, secretText).call();
     return sealedBid;
   }
@@ -151,7 +173,7 @@ $(document).ready(function () {
     let secretText = ($("#secret-text").val()).toString();
     let productId = $("#product-id").val();
     let sealedBid = App.keccakWithamountAndsecretText(amount, secretText);
-    sealedBid.then(sealedBid=>{
+    sealedBid.then(sealedBid => {
       App.bidProduct(productId, sealedBid, sendAmount);
     });
     event.preventDefault();
@@ -163,9 +185,18 @@ $(document).ready(function () {
     let amount = ($("#actual-amount").val()).toString();
     let secretText = ($("#reveal-secret-text").val()).toString();
     let productId = $("#product-id").val();
-    App.revealProduct(productId,amount, secretText);
+    App.revealProduct(productId, amount, secretText);
     event.preventDefault();
   });
+
+  // 托管
+  $("#finalize-auction").submit(function (event) {
+    $("#msg").hide();
+    let productId = $("#product-id").val();
+    App.finalizeProduct(productId);
+    event.preventDefault();
+  });
+  
 });
 
 // 商品列表样式

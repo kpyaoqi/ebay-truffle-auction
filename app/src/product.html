@@ -21,6 +21,7 @@
      </div>
      <div class="col-sm-8">
       <h3>Start Price: <span id="product-price"></span></h3>
+      <div id="product-status"></div>
       <form id="bidding" class="col-sm-4">
        <h4>Your Bid</h4>
        <div class="form-group">
@@ -51,8 +52,13 @@
        <input type="hidden" name="product-id" id="product-id" />
        <button type="submit" class="btn btn-primary">Reveal Bid</button>
       </form>
+      <form id="finalize-auction" class="col-sm-6">
+        <input type="hidden" name="product-id" id="product-id" />
+        <button type="submit" class="btn form-submit">Finalize Auction</button>
+       </form>  
      </div>
     </div>
+
     <div id="product-desc" class="col-sm-12">
      <h2>Product Description</h2>
     </div>

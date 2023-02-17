@@ -4,11 +4,15 @@ contract Escrow {
 	uint public productId;
 	address public buyer;
 	address public seller;
+	// 托管人
 	address public arbiter;
 	uint public amount;
+	// 是否释放
 	bool public fundsDisbursed;
+	// 释放给卖家
 	mapping (address => bool) releaseAmount;
 	uint public releaseCount;
+	// 回退给买家
 	mapping (address => bool) refundAmount;
 	uint public refundCount;
 
@@ -30,12 +34,13 @@ contract Escrow {
 		return (buyer, seller, arbiter, fundsDisbursed, releaseCount, refundCount);
 	}
 
-	function releaseAmountToSeller(address caller) public {
+	function releaseAmountToSeller() public {
 		require(!fundsDisbursed);
-		if ((caller == buyer || caller == seller || caller == arbiter) && releaseAmount[caller] != true) {
-			releaseAmount[caller] = true;
+		require(msg.sender == buyer || msg.sender == seller || msg.sender == arbiter);
+		if ( !releaseAmount[msg.sender] ) {
+			releaseAmount[msg.sender] = true;
 			releaseCount += 1;
-			emit UnlockAmount(productId, "release", caller);
+			emit UnlockAmount(productId, "release", msg.sender);
 		}
 		if (releaseCount == 2) {
 			payable(seller).transfer(amount);
@@ -44,12 +49,13 @@ contract Escrow {
 		}
 	}
 
-	function refundAmountToBuyer(address caller) public {
+	function refundAmountToBuyer() public {
 		require(!fundsDisbursed);
-		if ((caller == buyer || caller == seller || caller == arbiter) && refundAmount[caller] != true) {
-			refundAmount[caller] = true;
+		require(msg.sender == buyer || msg.sender == seller || msg.sender == arbiter);
+		if (!refundAmount[msg.sender]) {
+			refundAmount[msg.sender] = true;
 			refundCount += 1;
-			emit UnlockAmount(productId, "refund", caller);
+			emit UnlockAmount(productId, "refund", msg.sender);
 		}
 		if (refundCount == 2) {
 			payable(buyer).transfer(amount);
