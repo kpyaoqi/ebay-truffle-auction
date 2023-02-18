@@ -25,3 +25,4 @@ EcommerceStore.deployed().then(function(i) {i.highestBidderInfo.call(1).then(fun
 1,0x9c1a2bc909c956c211cd9fec7c637cf6d54d0a67ab7104b232010cdc2d6152b3
 1,2000000000000000000,h
 1,3000000000000000000,h
+hh
