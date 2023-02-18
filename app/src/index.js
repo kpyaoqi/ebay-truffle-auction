@@ -86,14 +86,16 @@ const App = {
       $("#product-id").val(res[0]);
       let currentTime = Math.round(new Date() / 1000);
       if (res[8] == 1) {
-        $("#product-status").html("Product sold");
+        $("#escrow-info").show();
+        this.highestBidder(productId);
+        this.escrowData(productId);
       } else if (res[8] == 2) {
         $("#product-status").html("Product was not sold");
       } else if (currentTime < res[6]) {
         $("#bidding").show();
-      } else if (currentTime - (120) < res[6]) {
+      } else if (currentTime - (200) < res[6]) {
         $("#revealing").show();
-      }else {
+      } else {
         $("#finalize-auction").show();
       }
     })
@@ -133,6 +135,54 @@ const App = {
       $("#msg").show();
       $("#msg").html("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
     })
+  },
+
+  // 最终竞拍人
+  highestBidder: async function (productId) {
+    const { highestBidderInfo } = this.EcommerceStore.methods;
+    await highestBidderInfo(productId).call().then(res=>{
+      if (res[2].toLocaleString() == '0') {
+        $("#product-status").html("Auction has ended. No bids were revealed");
+       } else {
+        $("#product-status").html("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
+         "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
+         "either release the funds to seller or refund the money to the buyer");
+       }
+    })
+  },
+
+  // 托管合约信息
+  escrowData: async function (productId) {
+    const { escrowInfo } = this.EcommerceStore.methods;
+    await escrowInfo(productId).call().then(res => {
+      $("#buyer").html('Buyer: ' + res[0]);
+      $("#seller").html('Seller: ' + res[1]);
+      $("#arbiter").html('Arbiter: ' + res[2]);
+      if (res[3] == true) {
+        $("#release-count").html("Amount from the escrow has been released");
+      } else {
+        $("#release-count").html(res[4] + " of 3 participants have agreed to release funds");
+        $("#refund-count").html(res[5] + " of 3 participants have agreed to refund the buyer");
+      }
+    })
+  },
+
+  // 释放给卖家
+  releaseFunds: async function (productId) {
+    const { releaseAmountToSeller } = this.EcommerceStore.methods;
+    await releaseAmountToSeller(productId).send({from:this.account,gas:999999}).then(res=>{
+      console.log(res);
+      location.reload();
+    }).catch(err=>{console.log(err)});
+  },
+
+  // 回退给买家
+  refundFunds: async function (productId) {
+    const { refundAmountToBuyer } = this.EcommerceStore.methods;
+    await refundAmountToBuyer(productId).send({from:this.account,gas:999999}).then(res=>{
+      console.log(res);
+      location.reload();
+    }).catch(err=>{console.log(err)});
   },
 
   // 获取密文
@@ -197,6 +247,20 @@ $(document).ready(function () {
     event.preventDefault();
   });
   
+  // 释放给卖家
+  $("#release-funds").click(function() {
+    let productId = new URLSearchParams(window.location.search).get('product-id');
+    $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+    App.releaseFunds(productId);
+   });
+   
+  // 回退给买家
+   $("#refund-funds").click(function() {
+    let productId = new URLSearchParams(window.location.search).get('product-id');
+    $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+    App.refundFunds(productId);
+    alert("refund the funds!");
+   });
 });
 
 // 商品列表样式

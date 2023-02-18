@@ -34,13 +34,13 @@ contract Escrow {
 		return (buyer, seller, arbiter, fundsDisbursed, releaseCount, refundCount);
 	}
 
-	function releaseAmountToSeller() public {
+	function releaseAmountToSeller(address caller) public {
 		require(!fundsDisbursed);
-		require(msg.sender == buyer || msg.sender == seller || msg.sender == arbiter);
-		if ( !releaseAmount[msg.sender] ) {
-			releaseAmount[msg.sender] = true;
+		require(caller == buyer || caller == seller || caller == arbiter);
+		if ( !releaseAmount[caller] ) {
+			releaseAmount[caller] = true;
 			releaseCount += 1;
-			emit UnlockAmount(productId, "release", msg.sender);
+			emit UnlockAmount(productId, "release", caller);
 		}
 		if (releaseCount == 2) {
 			payable(seller).transfer(amount);
@@ -49,13 +49,13 @@ contract Escrow {
 		}
 	}
 
-	function refundAmountToBuyer() public {
+	function refundAmountToBuyer(address caller) public {
 		require(!fundsDisbursed);
-		require(msg.sender == buyer || msg.sender == seller || msg.sender == arbiter);
-		if (!refundAmount[msg.sender]) {
-			refundAmount[msg.sender] = true;
+		require(caller == buyer || caller == seller || caller == arbiter);
+		if (!refundAmount[caller]) {
+			refundAmount[caller] = true;
 			refundCount += 1;
-			emit UnlockAmount(productId, "refund", msg.sender);
+			emit UnlockAmount(productId, "refund", caller);
 		}
 		if (refundCount == 2) {
 			payable(buyer).transfer(amount);

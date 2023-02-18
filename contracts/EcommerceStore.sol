@@ -208,11 +208,11 @@ contract EcommerceStore {
 	}
 
 	function releaseAmountToSeller(uint _productId) public {
-		Escrow(productEscrow[_productId]).releaseAmountToSeller();
+		Escrow(productEscrow[_productId]).releaseAmountToSeller(msg.sender);
 	}
 
 	function refundAmountToBuyer(uint _productId) public {
-		Escrow(productEscrow[_productId]).refundAmountToBuyer();
+		Escrow(productEscrow[_productId]).refundAmountToBuyer(msg.sender);
 	}
 
 	// 生成密钥
