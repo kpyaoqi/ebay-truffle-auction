@@ -82,12 +82,21 @@ const App = {
       $("#product-price").html(this.web3.utils.fromWei(res[7], 'ether') + "ETH");
       $("#product-name").html(res[1]);
       $("#product-auction-end").html(displayEndHours(res[6]));
+      $("#revealing, #bidding, #finalize-auction, #escrow-info").hide();
       $("#product-id").val(res[0]);
       let currentTime = Math.round(new Date() / 1000);
-      if (currentTime < res[6]) {
+      if (res[8] == 1) {
+        $("#escrow-info").show();
+        this.highestBidder(productId);
+        this.escrowData(productId);
+      } else if (res[8] == 2) {
+        $("#product-status").html("Product was not sold");
+      } else if (currentTime < res[6]) {
         $("#bidding").show();
-      } else if (currentTime - (60) < res[6]) {
+      } else if (currentTime - (200) < res[6]) {
         $("#revealing").show();
+      } else {
+        $("#finalize-auction").show();
       }
     })
   },
@@ -95,7 +104,7 @@ const App = {
   // 出价
   bidProduct: async function (productId, sealedBid, sendAmount) {
     const { bid } = this.EcommerceStore.methods;
-    await bid(productId,sealedBid).send({value:this.web3.utils.toWei(sendAmount,'ether'),from: this.account, gas: 999999}).then(res => {
+    await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account, gas: 999999 }).then(res => {
       $("#msg").html("Your bid has been successfully submitted!");
       $("#msg").show();
       console.log(res);
@@ -103,20 +112,83 @@ const App = {
   },
 
   // 揭示报价
-  revealProduct: async function (productId,amount, secretText) {
+  revealProduct: async function (productId, amount, secretText) {
     const { revealBid } = this.EcommerceStore.methods;
-    amount=this.web3.utils.toWei(amount,'ether');
-    await revealBid(productId,amount, secretText).send({from: this.account, gas: 999999}).then(res => {
+    let amounts = this.web3.utils.toWei(amount, 'ether');
+    await revealBid(productId, amounts, secretText).send({ from: this.account, gas: 999999 }).then(res => {
       $("#msg").show();
       $("#msg").html("Your bid has been successfully revealed!");
       console.log(res);
     })
   },
 
+  // 托管
+  finalizeProduct: async function (productId) {
+    const { finalizeAuction } = this.EcommerceStore.methods;
+    await finalizeAuction(productId).send({ from: this.account, gas: 999999 }).then(res => {
+      $("#msg").show();
+        $("#msg").html("The auction has been finalized and winner declared.");
+        console.log(res);
+        location.reload();
+    }).catch(err=>{
+      console.log(err);
+      $("#msg").show();
+      $("#msg").html("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
+    })
+  },
+
+  // 最终竞拍人
+  highestBidder: async function (productId) {
+    const { highestBidderInfo } = this.EcommerceStore.methods;
+    await highestBidderInfo(productId).call().then(res=>{
+      if (res[2].toLocaleString() == '0') {
+        $("#product-status").html("Auction has ended. No bids were revealed");
+       } else {
+        $("#product-status").html("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
+         "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
+         "either release the funds to seller or refund the money to the buyer");
+       }
+    })
+  },
+
+  // 托管合约信息
+  escrowData: async function (productId) {
+    const { escrowInfo } = this.EcommerceStore.methods;
+    await escrowInfo(productId).call().then(res => {
+      $("#buyer").html('Buyer: ' + res[0]);
+      $("#seller").html('Seller: ' + res[1]);
+      $("#arbiter").html('Arbiter: ' + res[2]);
+      if (res[3] == true) {
+        $("#release-count").html("Amount from the escrow has been released");
+      } else {
+        $("#release-count").html(res[4] + " of 3 participants have agreed to release funds");
+        $("#refund-count").html(res[5] + " of 3 participants have agreed to refund the buyer");
+      }
+    })
+  },
+
+  // 释放给卖家
+  releaseFunds: async function (productId) {
+    const { releaseAmountToSeller } = this.EcommerceStore.methods;
+    await releaseAmountToSeller(productId).send({from:this.account,gas:999999}).then(res=>{
+      console.log(res);
+      location.reload();
+    }).catch(err=>{console.log(err)});
+  },
+
+  // 回退给买家
+  refundFunds: async function (productId) {
+    const { refundAmountToBuyer } = this.EcommerceStore.methods;
+    await refundAmountToBuyer(productId).send({from:this.account,gas:999999}).then(res=>{
+      console.log(res);
+      location.reload();
+    }).catch(err=>{console.log(err)});
+  },
+
   // 获取密文
   keccakWithamountAndsecretText: async function (amount, secretText) {
     const { keccak } = this.EcommerceStore.methods;
-    amount=this.web3.utils.toWei(amount,'ether');
+    amount = this.web3.utils.toWei(amount, 'ether');
     var sealedBid = await keccak(amount, secretText).call();
     return sealedBid;
   }
@@ -151,7 +223,7 @@ $(document).ready(function () {
     let secretText = ($("#secret-text").val()).toString();
     let productId = $("#product-id").val();
     let sealedBid = App.keccakWithamountAndsecretText(amount, secretText);
-    sealedBid.then(sealedBid=>{
+    sealedBid.then(sealedBid => {
       App.bidProduct(productId, sealedBid, sendAmount);
     });
     event.preventDefault();
@@ -163,9 +235,32 @@ $(document).ready(function () {
     let amount = ($("#actual-amount").val()).toString();
     let secretText = ($("#reveal-secret-text").val()).toString();
     let productId = $("#product-id").val();
-    App.revealProduct(productId,amount, secretText);
+    App.revealProduct(productId, amount, secretText);
     event.preventDefault();
   });
+
+  // 托管
+  $("#finalize-auction").submit(function (event) {
+    $("#msg").hide();
+    let productId = $("#product-id").val();
+    App.finalizeProduct(productId);
+    event.preventDefault();
+  });
+  
+  // 释放给卖家
+  $("#release-funds").click(function() {
+    let productId = new URLSearchParams(window.location.search).get('product-id');
+    $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+    App.releaseFunds(productId);
+   });
+   
+  // 回退给买家
+   $("#refund-funds").click(function() {
+    let productId = new URLSearchParams(window.location.search).get('product-id');
+    $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+    App.refundFunds(productId);
+    alert("refund the funds!");
+   });
 });
 
 // 商品列表样式
