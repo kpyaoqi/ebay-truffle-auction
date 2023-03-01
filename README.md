@@ -92,7 +92,8 @@ truffle migrations
 ```
 npm run dev
 ```
-觉得不错的点一下Star :)
+觉得不错的点一下Star,谢谢大家qwq 
+:)
 
 
 
