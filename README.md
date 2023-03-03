@@ -87,6 +87,8 @@ npm install
 truffle migrations
 ```
 
+新增商品服务器我是部署在我的Java服务器里了，就不上传上来了...
+
 然后在项目app目录下启动项目
 
 ```
