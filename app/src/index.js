@@ -29,6 +29,8 @@ const App = {
       } else {
         this.renderStore();
       }
+      this.subscibeSaveProduct();
+
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
@@ -127,9 +129,9 @@ const App = {
     const { finalizeAuction } = this.EcommerceStore.methods;
     await finalizeAuction(productId).send({ from: this.account, gas: 999999 }).then(res => {
       $("#msg").show();
-        $("#msg").html("The auction has been finalized and winner declared.");
-        console.log(res);
-        location.reload();
+      $("#msg").html("The auction has been finalized and winner declared.");
+      console.log(res);
+      location.reload();
     }).catch(err=>{
       console.log(err);
       $("#msg").show();
@@ -143,11 +145,11 @@ const App = {
     await highestBidderInfo(productId).call().then(res=>{
       if (res[2].toLocaleString() == '0') {
         $("#product-status").html("Auction has ended. No bids were revealed");
-       } else {
+      } else {
         $("#product-status").html("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
-         "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
-         "either release the funds to seller or refund the money to the buyer");
-       }
+          "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
+          "either release the funds to seller or refund the money to the buyer");
+      }
     })
   },
 
@@ -191,6 +193,20 @@ const App = {
     amount = this.web3.utils.toWei(amount, 'ether');
     var sealedBid = await keccak(amount, secretText).call();
     return sealedBid;
+  },
+
+  // 订阅商品添加
+  subscibeSaveProduct: async function () {
+    this.EcommerceStore.events.NewProduct({
+      fromBlock: 'latest'
+    }, function (error, result) {
+      // 结果包含 非索引参数 以及 主题 topic
+      if (error) {
+        console.log(error);
+        return;
+      }
+      saveProduct(result.returnValues);
+    });
   }
 };
 
@@ -246,21 +262,21 @@ $(document).ready(function () {
     App.finalizeProduct(productId);
     event.preventDefault();
   });
-  
+
   // 释放给卖家
   $("#release-funds").click(function() {
     let productId = new URLSearchParams(window.location.search).get('product-id');
     $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
     App.releaseFunds(productId);
-   });
-   
+  });
+
   // 回退给买家
-   $("#refund-funds").click(function() {
+  $("#refund-funds").click(function() {
     let productId = new URLSearchParams(window.location.search).get('product-id');
     $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
     App.refundFunds(productId);
     alert("refund the funds!");
-   });
+  });
 });
 
 // 商品列表样式
@@ -334,6 +350,23 @@ function displayEndHours(seconds) {
   } else {
     return "Auction ends in " + remaining_seconds + " seconds";
   }
+}
+
+// 添加商品信息到数据库
+function saveProduct(product) {
+  var data = {
+    blockchainId: product._productId, name: product._name, category: product._category,
+    ipfsImageHash: product._imageLink, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
+    auctionEndTime: product._auctionEndTime, price: product._startPrice, condition: product._productCondition,
+    productStatus: 0
+  }
+  console.log(data);
+  $.ajax({
+    type: 'POST',
+    url: '/saveProduct',
+    contentType: 'application/json;charset=UTF-8',
+    data: JSON.stringify(data)
+  });
 }
 
 // Utf8Array转换Str

@@ -15,5 +15,14 @@ module.exports = {
       { from: "./src/product.html", to: "product.html" },
     ]),
   ],
-  devServer: { contentBase: path.join(__dirname, "dist"), compress: true },
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),  compress: true,port: 8080,
+    proxy: {
+      '/**': {
+        target: 'http://localhost:80',
+        secure: false
+      }
+    }
+  },
+  
 };
