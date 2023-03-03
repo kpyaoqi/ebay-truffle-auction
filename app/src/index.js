@@ -29,7 +29,7 @@ const App = {
       } else {
         this.renderStore();
       }
-      this.subscibeSaveProduct();
+      this.subscibeProduct();
 
     } catch (error) {
       console.error("Could not connect to contract or chain.");
@@ -196,7 +196,7 @@ const App = {
   },
 
   // 订阅商品添加
-  subscibeSaveProduct: async function () {
+  subscibeProduct: async function () {
     this.EcommerceStore.events.NewProduct({
       fromBlock: 'latest'
     }, function (error, result) {
