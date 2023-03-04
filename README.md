@@ -77,17 +77,29 @@ npm install
 }     
 ```
 
-
-
-# 最后
-
 在启动 ganache-cli 、IPFS后，在项目根目录下使用 truffle 部署合约
 
 ```
 truffle migrations
 ```
 
-新增商品服务器我是部署在我的Java服务器里了，[代码地址](https://github.com/kpyaoqi/JavaServer).
+新增商品服务器我是部署在我的Java服务器里了，[代码地址](https://github.com/kpyaoqi/JavaServer)
+
+在进行服务跳转的时候，会遇到跨域问题，需要在webpack.config.js文件添加一条代理配置：
+
+```js
+devServer: {
+    contentBase: path.join(__dirname, "dist"),  compress: true,port: 8080,
+    proxy: {
+      '/**': {
+        target: 'http://localhost:80',
+        secure: false
+      }
+    }
+  },
+```
+
+**因为这个我弄了好久，泪目，捣鼓了好几天，大家注意0^0，其他有什么问题可以私信我.**
 
 然后在项目app目录下启动项目
 
