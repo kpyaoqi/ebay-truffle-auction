@@ -27,27 +27,28 @@ const App = {
         $("#revealing, #bidding").hide();
         this.renderProductDetails(productId);
       } else {
-        this.renderStore();
+        // this.renderStore();
+        renderStore();
       }
       this.subscibeProduct();
-
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
   },
 
   // 加载页面显示列表
-  renderStore: async function () {
-    const { getProduct } = this.EcommerceStore.methods;
-    const { productIndex } = this.EcommerceStore.methods;
-    var Index = await productIndex().call();
-    var product;
-    if (Index > 0)
-      for (let i = 1; i <= Index; i++) {
-        product = await getProduct(i).call();
-        $("#product-list").append(buildProduct(product));
-      }
-  },
+  // renderStore: async function () {
+  //   const { getProduct } = this.EcommerceStore.methods;
+  //   const { productIndex } = this.EcommerceStore.methods;
+  //   var Index = await productIndex().call();
+  //   var product;
+  //   if (Index > 0)
+  //     for (let i = 1; i <= Index; i++) {
+  //       product = await getProduct(i).call();
+  //       $("#product-list").append(buildProduct(product));
+  //     }
+  // },
+
 
   // 添加商品
   saveProduct: async function (reader, decodedParams) {
@@ -132,7 +133,7 @@ const App = {
       $("#msg").html("The auction has been finalized and winner declared.");
       console.log(res);
       location.reload();
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err);
       $("#msg").show();
       $("#msg").html("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
@@ -142,7 +143,7 @@ const App = {
   // 最终竞拍人
   highestBidder: async function (productId) {
     const { highestBidderInfo } = this.EcommerceStore.methods;
-    await highestBidderInfo(productId).call().then(res=>{
+    await highestBidderInfo(productId).call().then(res => {
       if (res[2].toLocaleString() == '0') {
         $("#product-status").html("Auction has ended. No bids were revealed");
       } else {
@@ -172,19 +173,19 @@ const App = {
   // 释放给卖家
   releaseFunds: async function (productId) {
     const { releaseAmountToSeller } = this.EcommerceStore.methods;
-    await releaseAmountToSeller(productId).send({from:this.account,gas:999999}).then(res=>{
+    await releaseAmountToSeller(productId).send({ from: this.account, gas: 999999 }).then(res => {
       console.log(res);
       location.reload();
-    }).catch(err=>{console.log(err)});
+    }).catch(err => { console.log(err) });
   },
 
   // 回退给买家
   refundFunds: async function (productId) {
     const { refundAmountToBuyer } = this.EcommerceStore.methods;
-    await refundAmountToBuyer(productId).send({from:this.account,gas:999999}).then(res=>{
+    await refundAmountToBuyer(productId).send({ from: this.account, gas: 999999 }).then(res => {
       console.log(res);
       location.reload();
-    }).catch(err=>{console.log(err)});
+    }).catch(err => { console.log(err) });
   },
 
   // 获取密文
@@ -264,14 +265,14 @@ $(document).ready(function () {
   });
 
   // 释放给卖家
-  $("#release-funds").click(function() {
+  $("#release-funds").click(function () {
     let productId = new URLSearchParams(window.location.search).get('product-id');
     $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
     App.releaseFunds(productId);
   });
 
   // 回退给买家
-  $("#refund-funds").click(function() {
+  $("#refund-funds").click(function () {
     let productId = new URLSearchParams(window.location.search).get('product-id');
     $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
     App.refundFunds(productId);
@@ -279,19 +280,69 @@ $(document).ready(function () {
   });
 });
 
+// 加载页面显示列表
+function renderStore() {
+  const categories = ["Art", "Books", "Cameras", "Cell Phones & Accessories", "Clothing", "Computers & Tablets", "Gift Cards & Coupons", "Musical Instruments & Gear", "Pet Supplies", "Pottery & Glass", "Sporting Goods", "Tickets", "Toys & Hobbies", "Video Games"];
+  renderProducts("product-list", {});
+  renderProducts("product-reveal-list", { productStatus: "reveal" });
+  renderProducts("product-finalize-list", { productStatus: "finalize" });
+  categories.forEach(value => {
+    $("#categories").append("<div>" + value + "</div>");
+  });
+}
+
+// 
+function renderProducts(div, filter) {
+  $.ajax({
+    type: 'GET',
+    url: '/product/allProduct',
+    contentType: 'application/json;charset=UTF-8',
+    data: filter,
+    success: function (data) {
+      if (data.length == 0) {
+        $("#" + div).html('No products found');
+      }
+      while (data.length > 0) {
+        let chunks = data.splice(0, 4);
+        let row = $("<div/>");
+        row.addClass("row");
+        chunks.forEach(value => {
+          let node = buildProduct(value);
+          row.append(node);
+        });
+        $("#" + div).append(row);
+      }
+    }
+  });
+}
+
 // 商品列表样式
 function buildProduct(product) {
   let node = $("<div/>");
   node.addClass("col-sm-3 text-center col-margin-bottom-1");
   // node.append("<img src='https://ipfs.io/ipfs/" + product[3] + "' width='150px' />");
-  node.append("<a href='product.html?product-id=" + product[0] + "'><img src='http://localhost:9001/ipfs/" + product[3] + "' width='150px' height='100px' /></a>");
-  node.append("<div>" + product[1] + "</div>");
-  node.append("<div>" + product[2] + "</div>");
-  node.append("<div>" + product[5] + "</div>");
-  node.append("<div>" + product[6] + "</div>");
-  node.append("<div>Ether " + product[7] + "</div>");
+  node.append("<a href='product.html?product-id=" + product.blockchainId + "'><img src='http://localhost:9001/ipfs/" + product.ipfsImageHash + "' width='150px' height='100px' /></a>");
+  node.append("<div>" + product.productName + "</div>");
+  node.append("<div>" + product.productName + "</div>");
+  node.append("<div>" + product.category + "</div>");
+  node.append("<div>" + product.auctionStartTime + "</div>");
+  node.append("<div>Ether " + product.price + "</div>");
   return node;
 }
+
+// 商品列表样式
+// function buildProduct(product) {
+//   let node = $("<div/>");
+//   node.addClass("col-sm-3 text-center col-margin-bottom-1");
+//   // node.append("<img src='https://ipfs.io/ipfs/" + product[3] + "' width='150px' />");
+//   node.append("<a href='product.html?product-id=" + product[0] + "'><img src='http://localhost:9001/ipfs/" + product[3] + "' width='150px' height='100px' /></a>");
+//   node.append("<div>" + product[1] + "</div>");
+//   node.append("<div>" + product[2] + "</div>");
+//   node.append("<div>" + product[5] + "</div>");
+//   node.append("<div>" + product[6] + "</div>");
+//   node.append("<div>Ether " + product[7] + "</div>");
+//   return node;
+// }
 
 // 添加商品图片到IPFS
 function saveImageOnIpfs(reader) {
@@ -360,10 +411,9 @@ function saveProduct(product) {
     auctionEndTime: product._auctionEndTime, price: product._startPrice, condition: product._productCondition,
     productStatus: 0
   }
-  console.log(data);
   $.ajax({
     type: 'POST',
-    url: '/saveProduct',
+    url: '/product/saveProduct',
     contentType: 'application/json;charset=UTF-8',
     data: JSON.stringify(data)
   });
