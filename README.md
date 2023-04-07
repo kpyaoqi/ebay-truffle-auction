@@ -6,9 +6,6 @@
 
 这个项目主要是基于以太坊开发拍卖系统DApp，拍卖的原理类似于eBay，所以又可以叫做“去中心化eBay”项目.
 
-这个项目是根据[尚硅谷区块链项目硅谷拍卖系统](https://www.bilibili.com/video/BV1EJ411D7SL/)模仿做的，但是教程是很久之前的，用的版本都是好久之前的了.
-
-我现在用的版本都是**较新版本**，其他细节请参考[原文档](https://github.com/confucianzuoyuan/blockchain-tutorial/tree/master/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%95%99%E7%A8%8B/%E6%8B%8D%E5%8D%96%E5%BA%94%E7%94%A8).
 
 首先确保电脑已经安装**truffle、webpack、ganache-cli**
 
