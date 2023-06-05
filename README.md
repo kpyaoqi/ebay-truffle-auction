@@ -1,6 +1,6 @@
 # ebay-truffle-auction
 
-#### 这个分支是连接了Java后端的代码
+#### 这个分支是连接了Java后端的代码，对Mysql数据库进行了操作，如果不熟悉后端的话，可以先使用noback分支
 
 ## 声明：如有任何问题请联系wx：YQ-SmileATT
 
