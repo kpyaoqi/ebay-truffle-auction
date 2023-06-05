@@ -27,27 +27,26 @@ const App = {
         $("#revealing, #bidding").hide();
         this.renderProductDetails(productId);
       } else {
-        // this.renderStore();
-        renderStore();
+        this.renderStore();
+        // renderStore();
       }
-      this.subscibeProduct();
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
   },
 
   // 加载页面显示列表
-  // renderStore: async function () {
-  //   const { getProduct } = this.EcommerceStore.methods;
-  //   const { productIndex } = this.EcommerceStore.methods;
-  //   var Index = await productIndex().call();
-  //   var product;
-  //   if (Index > 0)
-  //     for (let i = 1; i <= Index; i++) {
-  //       product = await getProduct(i).call();
-  //       $("#product-list").append(buildProduct(product));
-  //     }
-  // },
+  renderStore: async function () {
+    const { getProduct } = this.EcommerceStore.methods;
+    const { productIndex } = this.EcommerceStore.methods;
+    var Index = await productIndex().call();
+    var product;
+    if (Index > 0)
+      for (let i = 1; i <= Index; i++) {
+        product = await getProduct(i).call();
+        $("#product-list").append(buildProduct(product));
+      }
+  },
 
 
   // 添加商品
@@ -197,18 +196,18 @@ const App = {
   },
 
   // 订阅商品添加
-  subscibeProduct: async function () {
-    this.EcommerceStore.events.NewProduct({
-      fromBlock: 'latest'
-    }, function (error, result) {
-      // 结果包含 非索引参数 以及 主题 topic
-      if (error) {
-        console.log(error);
-        return;
-      }
-      saveProduct(result.returnValues);
-    });
-  }
+  // subscibeProduct: async function () {
+  //   this.EcommerceStore.events.NewProduct({
+  //     fromBlock: 'latest'
+  //   }, function (error, result) {
+  //     // 结果包含 非索引参数 以及 主题 topic
+  //     if (error) {
+  //       console.log(error);
+  //       return;
+  //     }
+  //     saveProduct(result.returnValues);
+  //   });
+  // }
 };
 
 $(document).ready(function () {
@@ -281,15 +280,15 @@ $(document).ready(function () {
 });
 
 // 加载页面显示列表
-function renderStore() {
-  const categories = ["Art", "Books", "Cameras", "Cell Phones & Accessories", "Clothing", "Computers & Tablets", "Gift Cards & Coupons", "Musical Instruments & Gear", "Pet Supplies", "Pottery & Glass", "Sporting Goods", "Tickets", "Toys & Hobbies", "Video Games"];
-  renderProducts("product-list", {});
-  renderProducts("product-reveal-list", { productStatus: "reveal" });
-  renderProducts("product-finalize-list", { productStatus: "finalize" });
-  categories.forEach(value => {
-    $("#categories").append("<div>" + value + "</div>");
-  });
-}
+// function renderStore() {
+//   const categories = ["Art", "Books", "Cameras", "Cell Phones & Accessories", "Clothing", "Computers & Tablets", "Gift Cards & Coupons", "Musical Instruments & Gear", "Pet Supplies", "Pottery & Glass", "Sporting Goods", "Tickets", "Toys & Hobbies", "Video Games"];
+//   renderProducts("product-list", {});
+//   renderProducts("product-reveal-list", { productStatus: "reveal" });
+//   renderProducts("product-finalize-list", { productStatus: "finalize" });
+//   categories.forEach(value => {
+//     $("#categories").append("<div>" + value + "</div>");
+//   });
+// }
 
 // 
 function renderProducts(div, filter) {
@@ -317,32 +316,32 @@ function renderProducts(div, filter) {
 }
 
 // 商品列表样式
-function buildProduct(product) {
-  let node = $("<div/>");
-  node.addClass("col-sm-3 text-center col-margin-bottom-1");
-  // node.append("<img src='https://ipfs.io/ipfs/" + product[3] + "' width='150px' />");
-  node.append("<a href='product.html?product-id=" + product.blockchainId + "'><img src='http://localhost:9001/ipfs/" + product.ipfsImageHash + "' width='150px' height='100px' /></a>");
-  node.append("<div>" + product.productName + "</div>");
-  node.append("<div>" + product.productName + "</div>");
-  node.append("<div>" + product.category + "</div>");
-  node.append("<div>" + product.auctionStartTime + "</div>");
-  node.append("<div>Ether " + product.price + "</div>");
-  return node;
-}
-
-// 商品列表样式
 // function buildProduct(product) {
 //   let node = $("<div/>");
 //   node.addClass("col-sm-3 text-center col-margin-bottom-1");
 //   // node.append("<img src='https://ipfs.io/ipfs/" + product[3] + "' width='150px' />");
-//   node.append("<a href='product.html?product-id=" + product[0] + "'><img src='http://localhost:9001/ipfs/" + product[3] + "' width='150px' height='100px' /></a>");
-//   node.append("<div>" + product[1] + "</div>");
-//   node.append("<div>" + product[2] + "</div>");
-//   node.append("<div>" + product[5] + "</div>");
-//   node.append("<div>" + product[6] + "</div>");
-//   node.append("<div>Ether " + product[7] + "</div>");
+//   node.append("<a href='product.html?product-id=" + product.blockchainId + "'><img src='http://localhost:9001/ipfs/" + product.ipfsImageHash + "' width='150px' height='100px' /></a>");
+//   node.append("<div>" + product.productName + "</div>");
+//   node.append("<div>" + product.productName + "</div>");
+//   node.append("<div>" + product.category + "</div>");
+//   node.append("<div>" + product.auctionStartTime + "</div>");
+//   node.append("<div>Ether " + product.price + "</div>");
 //   return node;
 // }
+
+// 商品列表样式
+function buildProduct(product) {
+  let node = $("<div/>");
+  node.addClass("col-sm-3 text-center col-margin-bottom-1");
+  // node.append("<img src='https://ipfs.io/ipfs/" + product[3] + "' width='150px' />");
+  node.append("<a href='product.html?product-id=" + product[0] + "'><img src='http://localhost:9001/ipfs/" + product[3] + "' width='150px' height='100px' /></a>");
+  node.append("<div>" + product[1] + "</div>");
+  node.append("<div>" + product[2] + "</div>");
+  node.append("<div>" + product[5] + "</div>");
+  node.append("<div>" + product[6] + "</div>");
+  node.append("<div>Ether " + product[7] + "</div>");
+  return node;
+}
 
 // 添加商品图片到IPFS
 function saveImageOnIpfs(reader) {
@@ -456,14 +455,9 @@ window.App = App;
 // web3初始化
 window.addEventListener("load", function () {
   if (window.ethereum) {
-    // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
-    window.ethereum.enable(); // get permission to access accounts
+    window.ethereum.enable(); 
   } else {
-    console.warn(
-      "No web3 detected. Falling back to http://127.0.0.1:8545. You should remove this fallback when you deploy live",
-    );
-    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     App.web3 = new Web3(
       new Web3.providers.HttpProvider("http://127.0.0.1:8545"),
     );
