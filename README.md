@@ -1,6 +1,6 @@
 # ebay-truffle-auction
 
-这个分支是连接了Java后端的代码
+#### 这个分支是连接了Java后端的代码
 
 ## 声明：如有任何问题请联系wx：YQ-SmileATT
 
