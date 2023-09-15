@@ -80,10 +80,11 @@ npm install
 ```
 truffle migrations
 ```
+此分支下可忽略这一步
 
 新增商品服务器时监听区块链状态，然后添加到mysql数据库中，我部署在我的Java服务器里了（[代码地址](https://github.com/kpyaoqi/JavaServer)）
 
-如果Java不熟悉的话，也可以替换成直接查询区块链数据，或者自己有熟悉的后端语言的话也可以用其他的语言部署
+如果Java不熟悉的话，可以用自己熟悉的后端语言的话也可以用其他的语言部署
 
 在进行服务跳转的时候，会遇到跨域问题，需要在webpack.config.js文件添加一条代理配置：
 
