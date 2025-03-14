@@ -2,6 +2,8 @@
 
 #### 这个分支是连接了Java后端的代码，对Mysql数据库进行了操作，如果不熟悉后端的话，可以先使用noback分支
 
+#### 接区块链项目开发、智能合约开发，需要的私我😄
+
 ## 声明：如有任何问题请联系wx：YQ-SmileATT
 
 前置知识：solidity、truffle、JavaScript、web3.js、Java(非必须其他后端语言均可)......
