@@ -1,17 +1,235 @@
 <!DOCTYPE html>
 <html>
+
 <head>
- <title>区块链拍卖商城</title>
- <link href='https://fonts.proxy.ustclug.org/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
- <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="./js/index.js"></script>
- <style>
-  body {
-    font-family: 'Open Sans', sans-serif;
-    background-color: #f5f5f5;
-  }
-  
+  <title>区块链拍卖商城</title>
+  <link href='https://fonts.proxy.ustclug.org/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./js/index.js"></script>
+  <script src="./js/buys.js"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    .sidebar {
+      background-color: #2c3e50;
+      padding: 25px;
+      height: 100vh;
+      border-right: 1px solid #34495e;
+      position: fixed;
+      width: 250px;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 25px;
+      color: #ecf0f1;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar ul li a {
+      display: block;
+      padding: 12px 20px;
+      background-color: #34495e;
+      color: #ecf0f1;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #3498db;
+      transform: translateX(5px);
+    }
+
+    .sidebar ul li a.active {
+      background-color: #3498db;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-content {
+      margin-left: 270px;
+      padding: 30px;
+      background-color: #fff;
+      min-height: 100vh;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 0;
+      margin-bottom: 30px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .status-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 1;
+    }
+
+    .status-active {
+      background-color: #2ecc71;
+    }
+
+    .status-reveal {
+      background-color: #f1c40f;
+    }
+
+    .status-finalize {
+      background-color: #e74c3c;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-name {
+      color: #2c3e50;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 15px 0;
+      height: 44px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .price-tag {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .price {
+      color: #e74c3c;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .auction-time {
+      font-size: 13px;
+      color: #95a5a6;
+    }
+
+    .auction-time div {
+      margin-bottom: 5px;
+    }
+
+    .glyphicon {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 左侧导航条 -->
+      <div class="col-sm-2 sidebar">
+        <h3><i class="glyphicon glyphicon-th-list"></i> 导航菜单</h3>
+        <ul>
+          <li><a href="index.html" class="active"><i class="glyphicon glyphicon-shopping-cart"></i> 商品购买</a></li>
+          <li><a href="reveal.html"><i class="glyphicon glyphicon-eye-open"></i> 揭示阶段</a></li>
+          <li><a href="finalize.html"><i class="glyphicon glyphicon-ok-circle"></i> 完成阶段</a></li>
+          <li><a href="list-item.html"><i class="glyphicon glyphicon-plus"></i> 添加商品</a></li>
+        </ul>
+      </div>
+
+      <!-- 主内容区域 -->
+      <div class="col-sm-10 main-content">
+        <div class="dashboard-header">
+          <h1 class="main-title">区块链拍卖商城</h1>
+          <div class="stats-container">
+            <div class="stat-box">
+              <i class="glyphicon glyphicon-shopping-cart"></i>
+              <div class="stat-info">
+                <span class="stat-label">商品总数</span>
+                <span class="stat-value" id="total-products">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section-title">
+          <h2>可购买商品</h2>
+        </div>
+        <div class="row">
+          <div class="category-filter">
+            <button class="btn btn-default active" data-category="all">全部</button>
+            <button class="btn btn-default" data-category="艺术">艺术</button>
+            <button class="btn btn-default" data-category="电子产品">电子产品</button>
+            <button class="btn btn-default" data-category="时尚">时尚</button>
+            <button class="btn btn-default" data-category="家居">家居</button>
+            <button class="btn btn-default" data-category="运动">运动</button>
+            <button class="btn btn-default" data-category="其他">其他</button>
+          </div>
+          <div class="row" id="product-list">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>
+
+<style>
   .sidebar {
     background-color: #2c3e50;
     padding: 25px;
@@ -20,23 +238,23 @@
     position: fixed;
     width: 250px;
   }
-  
+
   .sidebar h3 {
     margin-bottom: 25px;
     color: #ecf0f1;
     font-size: 22px;
     font-weight: 600;
   }
-  
+
   .sidebar ul {
     list-style-type: none;
     padding: 0;
   }
-  
+
   .sidebar ul li {
     margin-bottom: 15px;
   }
-  
+
   .sidebar ul li a {
     display: block;
     padding: 12px 20px;
@@ -46,23 +264,23 @@
     border-radius: 6px;
     transition: all 0.3s ease;
   }
-  
+
   .sidebar ul li a:hover {
     background-color: #3498db;
     transform: translateX(5px);
   }
-  
+
   .sidebar ul li a.active {
     background-color: #3498db;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
-  
+
   .main-content {
     margin-left: 270px;
     padding: 30px;
     background-color: #fff;
     min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
 
   .product-card {
@@ -70,14 +288,14 @@
     border-radius: 12px;
     padding: 0;
     margin-bottom: 30px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     overflow: hidden;
   }
 
   .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   }
 
   .product-image {
@@ -172,287 +390,82 @@
   .glyphicon {
     margin-right: 5px;
   }
-</style>
-</head>
-<body>
- <div class="container-fluid">
-  <div class="row">
-   <!-- 左侧导航条 -->
-   <div class="col-sm-2 sidebar">
-    <h3><i class="glyphicon glyphicon-th-list"></i> 导航菜单</h3>
-    <ul>
-     <li><a href="index.html" class="active"><i class="glyphicon glyphicon-shopping-cart"></i> 商品购买</a></li>
-     <li><a href="reveal.html"><i class="glyphicon glyphicon-eye-open"></i> 揭示阶段</a></li>
-     <li><a href="finalize.html"><i class="glyphicon glyphicon-ok-circle"></i> 完成阶段</a></li>
-     <li><a href="list-item.html"><i class="glyphicon glyphicon-plus"></i> 添加商品</a></li>
-    </ul>
-   </div>
-   
-   <!-- 主内容区域 -->
-   <div class="col-sm-10 main-content">
-    <div class="dashboard-header">
-        <h1 class="main-title">区块链拍卖商城</h1>
-        <div class="stats-container">
-            <div class="stat-box">
-                <i class="glyphicon glyphicon-shopping-cart"></i>
-                <div class="stat-info">
-                    <span class="stat-label">商品总数</span>
-                    <span class="stat-value" id="total-products">0</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="section-title">
-        <h2>可购买商品</h2>
-    </div>
-    <div class="row">
-        <div class="row" id="product-list">
-        </div>
-    </div>
-</div>
-   </div>
-  </div>
- </div>
-</body>
-</html>
 
-<style>
-.sidebar {
-    background-color: #2c3e50;
-    padding: 25px;
-    height: 100vh;
-    border-right: 1px solid #34495e;
-    position: fixed;
-    width: 250px;
-}
-
-.sidebar h3 {
-    margin-bottom: 25px;
-    color: #ecf0f1;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 15px;
-}
-
-.sidebar ul li a {
-    display: block;
-    padding: 12px 20px;
-    background-color: #34495e;
-    color: #ecf0f1;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.sidebar ul li a:hover {
-    background-color: #3498db;
-    transform: translateX(5px);
-}
-
-.sidebar ul li a.active {
-    background-color: #3498db;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.main-content {
-    margin-left: 270px;
-    padding: 30px;
-    background-color: #fff;
-    min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-.product-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 0;
-    margin-bottom: 30px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.product-image {
-    position: relative;
-    height: 250px;
-    overflow: hidden;
-}
-
-.product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.product-card:hover .product-image img {
-    transform: scale(1.05);
-}
-
-.status-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    z-index: 1;
-}
-
-.status-active {
-    background-color: #2ecc71;
-}
-
-.status-reveal {
-    background-color: #f1c40f;
-}
-
-.status-finalize {
-    background-color: #e74c3c;
-}
-
-.product-info {
-    padding: 20px;
-}
-
-.product-name {
-    color: #2c3e50;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 15px 0;
-    height: 44px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-
-.product-meta {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    color: #7f8c8d;
-    font-size: 14px;
-}
-
-.price-tag {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.price {
-    color: #e74c3c;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.auction-time {
-    font-size: 13px;
-    color: #95a5a6;
-}
-
-.auction-time div {
-    margin-bottom: 5px;
-}
-
-.glyphicon {
-    margin-right: 5px;
-}
-
-.dashboard-header {
+  .dashboard-header {
     padding: 20px 0;
     margin-bottom: 30px;
     border-bottom: 1px solid #eee;
-}
+  }
 
-.main-title {
+  .main-title {
     color: #2c3e50;
     font-size: 32px;
     font-weight: 600;
     margin: 0 0 20px 0;
     text-align: center;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
 
-.stats-container {
+  .stats-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-}
+  }
 
-.stat-box {
+  .stat-box {
     background: #fff;
     border-radius: 10px;
     padding: 15px 25px;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease;
-}
+  }
 
-.stat-box:hover {
+  .stat-box:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
 
-.stat-box i {
+  .stat-box i {
     font-size: 24px;
     color: #3498db;
     margin-right: 15px;
-}
+  }
 
-.stat-info {
+  .stat-info {
     display: flex;
     flex-direction: column;
-}
+  }
 
-.stat-label {
+  .stat-label {
     font-size: 14px;
     color: #7f8c8d;
     margin-bottom: 5px;
-}
+  }
 
-.stat-value {
+  .stat-value {
     font-size: 24px;
     font-weight: 600;
     color: #2c3e50;
-}
+  }
 
-.section-title {
+  .section-title {
     text-align: center;
     margin: 30px 0;
-}
+  }
 
-.section-title h2 {
+  .section-title h2 {
     color: #2c3e50;
     font-size: 24px;
     font-weight: 600;
     position: relative;
     display: inline-block;
     padding: 0 15px;
-}
+  }
 
-.section-title h2:before,
-.section-title h2:after {
+  .section-title h2:before,
+  .section-title h2:after {
     content: "";
     position: absolute;
     top: 50%;
@@ -460,13 +473,34 @@
     height: 2px;
     background: #3498db;
     transform: translateY(-50%);
-}
+  }
 
-.section-title h2:before {
+  .section-title h2:before {
     left: -60px;
-}
+  }
 
-.section-title h2:after {
+  .section-title h2:after {
     right: -60px;
-}
+  }
+
+  .category-filter {
+    margin: 20px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .category-filter button {
+    margin: 0 5px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+
+  .category-filter button.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+  }
 </style>

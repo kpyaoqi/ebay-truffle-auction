@@ -7,6 +7,7 @@ module.exports = {
     index: "./src/js/index.js",
     reveal: "./src/js/reveal.js",
     finalize: "./src/js/finalize.js",
+    buys: "./src/js/buys.js",
   },
   output: {
     filename: "js/[name].js",

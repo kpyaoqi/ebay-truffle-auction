@@ -57,14 +57,14 @@ export const AppOfWeb3 = {
     let duration = parseInt(params["product-auction-end"]);
     let multiplier = params["product-auction-end-type"] === "days" ? 24 * 60 * 60 : 60;
     let auctionEndTime = auctionStartTime + duration * multiplier;
-    
+
     const { addProductToStore } = this.EcommerceStore.methods;
     await addProductToStore(params["product-name"], params["product-category"], imageId, descId, auctionStartTime,
       auctionEndTime, this.web3.utils.toWei(params["product-price"], 'ether'), parseInt(params["product-condition"]))
       .send({ from: this.account, gas: 999999 }).then(console.log);
     $("#msg").show();
     $("#msg").html("您的商品已成功添加到商店！");
-},
+  },
 
   // 商品详情
   renderProductDetails: async function (productId) {
@@ -86,6 +86,12 @@ export const AppOfWeb3 = {
         this.escrowData(productId);
       } else if (res[8] == 2) {
         $("#product-status").html("商品未售出");
+      } else if (currentTime < res[6]) {
+        $("#bidding").show();
+      } else if (currentTime - (200) < res[6]) {
+        $("#revealing").show();
+      } else {
+        $("#finalize-auction").show();
       }
     })
   },

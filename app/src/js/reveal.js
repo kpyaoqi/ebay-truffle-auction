@@ -22,7 +22,7 @@ class Fun {
           }
           
           if (data.length == 0) {
-            $("#" + div).html('No products found');
+            $("#" + div).html('未找到商品');
           }
           while (data.length > 0) {
             let chunks = data.splice(0, 3);  // 修改为3个一组
