@@ -1,0 +1,529 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x1EA656c2ceF2Fbd13067bf65cB526C7a044ABA05",
+    "txHash": "0x63a0beafc0a6312b61aaac9c3e33bf034e704922ca88f53858379fbbd7e85113"
+  },
+  "proxies": [
+    {
+      "address": "0xE7827794bea99aAd912E0891C019c28412dB9Ab6",
+      "txHash": "0xf934dba959adcc6c5a7221b8b3ab14fce6eb8639a758febe54a94c00e13d711d",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xd2036F71C1669B7e9DC33142617FeB277e864626",
+      "txHash": "0x7c90515839ce2d4ec1ab0de06ef1911a50ae797b14b09bfd1fe1fbacf97663cb",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xAc0a0F10036da40a3e7c7Bb9563C01ff55C32269",
+      "txHash": "0x1f4b9d9ea33352a609420a52c675614b881ec01be50615f0872022bf1e57af5f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x6a337CcE088291240B5e2E2238C82904a250A0C5",
+      "txHash": "0x70e8fce0b55308483b986b47f47601e4b12b9d077baf5053775366434df4801f",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "3f8e253ce6ae85b4517343b86a3bede57bd469fd36c07b1d2c504f0ba2880c16": {
+      "address": "0xc18d5b806B19c106e8388CEdF2b6f9C8d07459b1",
+      "txHash": "0xaba83f62fa7a72a3c71f53df5adc00c4aff0a3bcf71e486d15be5ec836e382a0",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "EcommerceStore",
+            "label": "productIndex",
+            "type": "t_uint256",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:20"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "stores",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)64_storage))",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:22"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "productIdInStore",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:25"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "productEscrow",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:28"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)64_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct EcommerceStore.Product))"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_struct(Product)64_storage)": {
+            "label": "mapping(uint256 => struct EcommerceStore.Product)"
+          },
+          "t_struct(Product)64_storage": {
+            "label": "struct EcommerceStore.Product",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "imageLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "descLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "auctionStartTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "auctionEndTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "highestBidder",
+                "type": "t_address"
+              },
+              {
+                "label": "highestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "secondHighestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalBids",
+                "type": "t_uint256"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(ProductStatus)6"
+              },
+              {
+                "label": "condition",
+                "type": "t_enum(ProductCondition)9"
+              },
+              {
+                "label": "bids",
+                "type": "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)73_storage))"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_enum(ProductStatus)6": {
+            "label": "enum EcommerceStore.ProductStatus",
+            "members": [
+              "Open",
+              "Sold",
+              "Unsold"
+            ]
+          },
+          "t_enum(ProductCondition)9": {
+            "label": "enum EcommerceStore.ProductCondition",
+            "members": [
+              "New",
+              "Used"
+            ]
+          },
+          "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)73_storage))": {
+            "label": "mapping(address => mapping(bytes32 => struct EcommerceStore.Bid))"
+          },
+          "t_mapping(t_bytes32,t_struct(Bid)73_storage)": {
+            "label": "mapping(bytes32 => struct EcommerceStore.Bid)"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(Bid)73_storage": {
+            "label": "struct EcommerceStore.Bid",
+            "members": [
+              {
+                "label": "bidder",
+                "type": "t_address"
+              },
+              {
+                "label": "productId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          }
+        }
+      }
+    },
+    "421c62dafa9c080345589d6c526ca31c6ccb831dff94325482c07a2171306f95": {
+      "address": "0x817Edf0624deF935d87a376B6A68AC98241517b8",
+      "txHash": "0x8366f78337aa20fcdc66832919ce80bfdc753677fabba0f6aeaea7f1ac0b0c0f",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "EcommerceStore",
+            "label": "productIndex",
+            "type": "t_uint256",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:19"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "stores",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)64_storage))",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:21"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "productIdInStore",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:25"
+          },
+          {
+            "contract": "EcommerceStore",
+            "label": "productEscrow",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStore.sol:27"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)64_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct EcommerceStore.Product))"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_struct(Product)64_storage)": {
+            "label": "mapping(uint256 => struct EcommerceStore.Product)"
+          },
+          "t_struct(Product)64_storage": {
+            "label": "struct EcommerceStore.Product",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "imageLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "descLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "auctionStartTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "auctionEndTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "highestBidder",
+                "type": "t_address"
+              },
+              {
+                "label": "highestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "secondHighestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalBids",
+                "type": "t_uint256"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(ProductStatus)6"
+              },
+              {
+                "label": "condition",
+                "type": "t_enum(ProductCondition)9"
+              },
+              {
+                "label": "bids",
+                "type": "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)73_storage))"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_enum(ProductStatus)6": {
+            "label": "enum EcommerceStore.ProductStatus",
+            "members": [
+              "Open",
+              "Sold",
+              "Unsold"
+            ]
+          },
+          "t_enum(ProductCondition)9": {
+            "label": "enum EcommerceStore.ProductCondition",
+            "members": [
+              "New",
+              "Used"
+            ]
+          },
+          "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)73_storage))": {
+            "label": "mapping(address => mapping(bytes32 => struct EcommerceStore.Bid))"
+          },
+          "t_mapping(t_bytes32,t_struct(Bid)73_storage)": {
+            "label": "mapping(bytes32 => struct EcommerceStore.Bid)"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(Bid)73_storage": {
+            "label": "struct EcommerceStore.Bid",
+            "members": [
+              {
+                "label": "bidder",
+                "type": "t_address"
+              },
+              {
+                "label": "productId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          }
+        }
+      }
+    },
+    "d125ce0b21126d95b457a0e29a753f54661698bebeefcc64d8bd37cd35a2a3ee": {
+      "address": "0xf6F12e18cC2907DBa63C665E604e35Eb4D5Ff087",
+      "txHash": "0x3746ac99f8b33463159a4a6c2d9bd5825eef85e0657a889a2a43d8d2ba33be99",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "EcommerceStoreV2",
+            "label": "productIndex",
+            "type": "t_uint256",
+            "src": "..\\project:\\contracts\\EcommerceStoreV2.sol:19"
+          },
+          {
+            "contract": "EcommerceStoreV2",
+            "label": "stores",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)988_storage))",
+            "src": "..\\project:\\contracts\\EcommerceStoreV2.sol:21"
+          },
+          {
+            "contract": "EcommerceStoreV2",
+            "label": "productIdInStore",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStoreV2.sol:25"
+          },
+          {
+            "contract": "EcommerceStoreV2",
+            "label": "productEscrow",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "..\\project:\\contracts\\EcommerceStoreV2.sol:27"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(Product)988_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct EcommerceStoreV2.Product))"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_struct(Product)988_storage)": {
+            "label": "mapping(uint256 => struct EcommerceStoreV2.Product)"
+          },
+          "t_struct(Product)988_storage": {
+            "label": "struct EcommerceStoreV2.Product",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "imageLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "descLink",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "auctionStartTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "auctionEndTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "highestBidder",
+                "type": "t_address"
+              },
+              {
+                "label": "highestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "secondHighestBid",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalBids",
+                "type": "t_uint256"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(ProductStatus)930"
+              },
+              {
+                "label": "condition",
+                "type": "t_enum(ProductCondition)933"
+              },
+              {
+                "label": "bids",
+                "type": "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)997_storage))"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_enum(ProductStatus)930": {
+            "label": "enum EcommerceStoreV2.ProductStatus",
+            "members": [
+              "Open",
+              "Sold",
+              "Unsold"
+            ]
+          },
+          "t_enum(ProductCondition)933": {
+            "label": "enum EcommerceStoreV2.ProductCondition",
+            "members": [
+              "New",
+              "Used"
+            ]
+          },
+          "t_mapping(t_address,t_mapping(t_bytes32,t_struct(Bid)997_storage))": {
+            "label": "mapping(address => mapping(bytes32 => struct EcommerceStoreV2.Bid))"
+          },
+          "t_mapping(t_bytes32,t_struct(Bid)997_storage)": {
+            "label": "mapping(bytes32 => struct EcommerceStoreV2.Bid)"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(Bid)997_storage": {
+            "label": "struct EcommerceStoreV2.Bid",
+            "members": [
+              {
+                "label": "bidder",
+                "type": "t_address"
+              },
+              {
+                "label": "productId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          }
+        }
+      }
+    }
+  }
+}
