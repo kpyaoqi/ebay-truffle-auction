@@ -63,7 +63,7 @@ export const AppOfWeb3 = {
       auctionEndTime, this.web3.utils.toWei(params["product-price"], 'ether'), parseInt(params["product-condition"]))
       .send({ from: this.account, gas: 999999 }).then(console.log);
     $("#msg").show();
-    $("#msg").html("Your product was successfully added to your store!");
+    $("#msg").html("您的商品已成功添加到商店！");
 },
 
   // 商品详情
@@ -85,13 +85,7 @@ export const AppOfWeb3 = {
         this.highestBidder(productId);
         this.escrowData(productId);
       } else if (res[8] == 2) {
-        $("#product-status").html("Product was not sold");
-      } else if (currentTime < res[6]) {
-        $("#bidding").show();
-      } else if (currentTime - (200) < res[6]) {
-        $("#revealing").show();
-      } else {
-        $("#finalize-auction").show();
+        $("#product-status").html("商品未售出");
       }
     })
   },
@@ -100,7 +94,7 @@ export const AppOfWeb3 = {
   bidProduct: async function (productId, sealedBid, sendAmount) {
     const { bid } = this.EcommerceStore.methods;
     await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account, gas: 999999 }).then(res => {
-      $("#msg").html("Your bid has been successfully submitted!");
+      $("#msg").html("您的出价已成功提交！");
       $("#msg").show();
       console.log(res);
     })
@@ -112,7 +106,7 @@ export const AppOfWeb3 = {
     let amounts = this.web3.utils.toWei(amount, 'ether');
     await revealBid(productId, amounts, secretText).send({ from: this.account, gas: 999999 }).then(res => {
       $("#msg").show();
-      $("#msg").html("Your bid has been successfully revealed!");
+      $("#msg").html("您的出价已成功揭示！");
       console.log(res);
     })
   },
@@ -122,7 +116,7 @@ export const AppOfWeb3 = {
     const { finalizeAuction } = this.EcommerceStore.methods;
     await finalizeAuction(productId).send({ from: this.account, gas: 999999 }).then(res => {
       $("#msg").show();
-      $("#msg").html("The auction has been finalized and winner declared.");
+      $("#msg").html("拍卖已完成，获胜者已确定");
       console.log(res);
       location.reload();
     }).catch(err => {
@@ -137,11 +131,9 @@ export const AppOfWeb3 = {
     const { highestBidderInfo } = this.EcommerceStore.methods;
     await highestBidderInfo(productId).call().then(res => {
       if (res[2].toLocaleString() == '0') {
-        $("#product-status").html("Auction has ended. No bids were revealed");
+        $("#product-status").html("拍卖已结束，未揭示任何出价");
       } else {
-        $("#product-status").html("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
-          "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
-          "either release the funds to seller or refund the money to the buyer");
+        $("#product-status").html(`拍卖已结束。商品以Ξ:${this.web3.utils.fromWei(res[2], 'ether')}的价格售予${res[0]}。资金已托管，需要买家、卖家和仲裁者中的两位同意才能释放资金给卖家或退款给买家`);
       }
     })
   },
@@ -154,10 +146,10 @@ export const AppOfWeb3 = {
       $("#seller").html('Seller: ' + res[1]);
       $("#arbiter").html('Arbiter: ' + res[2]);
       if (res[3] == true) {
-        $("#release-count").html("Amount from the escrow has been released");
+        $("#release-count").html("托管资金已释放给卖家");
       } else {
-        $("#release-count").html(res[4] + " of 3 participants have agreed to release funds");
-        $("#refund-count").html(res[5] + " of 3 participants have agreed to refund the buyer");
+        $("#release-count").html(`${res[4]}位参与者同意释放资金(共需3位)`);
+        $("#refund-count").html(`${res[5]}位参与者同意退款给买家(共需3位)`);
       }
     })
   },

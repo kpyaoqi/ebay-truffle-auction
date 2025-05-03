@@ -5,7 +5,7 @@ class Fun {
   constructor() {
     // 加载页面显示列表
     this.renderStore = function renderStore() {
-      this.renderProducts("product-list", {});
+      this.renderProducts("product-reveal-list", { productStatus: "reveal" });
     };
 
     // 
@@ -17,7 +17,7 @@ class Fun {
         data: filter,
         success: function (data) {
           // 更新商品总数显示
-          if (div === "product-list") {
+          if (div === "product-reveal-list") {
             $("#total-products").text(data.length);
           }
           
@@ -91,7 +91,7 @@ class Fun {
       } else if (minutes > 0) {
         return "拍卖将在" + minutes + "分钟后结束";
       } else {
-        return "拍卖将在" + remaining_seconds + "秒后结束";
+        return "拍卖将在" + remaining_seconds + "秒后结束"; 
       }
     };
 
@@ -145,6 +145,10 @@ class Fun {
     };
   }
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const funInstance = new Fun();
+  funInstance.renderStore();
+});
 
 module.exports = Fun;
 
@@ -158,13 +162,13 @@ function buildProduct(product) {
   
   if (timeRemaining <= 0) {
     statusClass = 'status-finalize';
-    statusText = '已结束';
+    statusText = '拍卖结束';  // 修改为"拍卖结束"
   } else if (timeRemaining < 3600) { // 小于1小时
     statusClass = 'status-reveal status-urgent';
-    statusText = '即将结束';
+    statusText = '即将截标';  // 修改为"即将截标"
   } else {
     statusClass = 'status-active';
-    statusText = '进行中';
+    statusText = '竞拍中';    // 修改为"竞拍中"
   }
 
   // 价格转换（从Wei到ETH）
@@ -191,28 +195,30 @@ function buildProduct(product) {
   let node = $("<div/>");
   node.addClass("col-sm-4");
   node.append(`
-    <div class="product-card">
-      <div class="product-image">
-        <div class="status-badge ${statusClass}">${statusText}</div>
+    <div class="product-card" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+      <div class="product-image" style="position: relative; overflow: hidden; border-radius: 8px 8px 0 0;">
+        <div class="status-badge ${statusClass}" style="position: absolute; top: 10px; right: 10px; padding: 4px 8px; font-size: 12px; font-weight: bold; color: white; background: ${statusClass === 'status-active' ? '#4CAF50' : statusClass === 'status-reveal' ? '#FF9800' : '#F44336'}; border-radius: 0;">
+          ${statusText}
+        </div>
         <a href='product.html?product-id=${product.blockchainId}'>
-          <img src='http://localhost:9001/ipfs/${product.ipfsImageHash}' class='img-responsive'/>
+          <img src='http://localhost:9001/ipfs/${product.ipfsImageHash}' class='img-responsive' style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s ease;"/>
         </a>
       </div>
-      <div class="product-info">
-        <h4 class="product-name">${product.productName}</h4>
-        <div class="product-meta">
-          <span class="category">
+      <div class="product-info" style="padding: 16px;">
+        <h4 class="product-name" style="margin: 0 0 8px 0; font-size: 16px; color: #333;">${product.productName}</h4>
+        <div class="product-meta" style="margin-bottom: 8px;">
+          <span class="category" style="font-size: 12px; color: #666;">
             <i class="glyphicon glyphicon-tag"></i> ${product.category}
           </span>
         </div>
-        <div class="price-tag">
-          <div class="price">
+        <div class="price-tag" style="margin-bottom: 12px;">
+          <div class="price" style="font-size: 18px; font-weight: bold; color: #2196F3;">
             <i class="glyphicon glyphicon-usd"></i> ${priceInEth}
-            <span class="price-eth">ETH</span>
+            <span class="price-eth" style="font-size: 12px; color: #666;">ETH</span>
           </div>
         </div>
-        <div class="auction-time">
-          <div class="time-remaining">
+        <div class="auction-time" style="font-size: 12px; color: #666;">
+          <div class="time-remaining" style="margin-bottom: 4px;">
             <i class="glyphicon glyphicon-time"></i> 
             剩余时间: ${timeDisplay}
           </div>

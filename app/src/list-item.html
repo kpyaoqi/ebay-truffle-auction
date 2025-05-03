@@ -1,115 +1,229 @@
 <!DOCTYPE html>
 <html>
+
 <head>
- <title>Decentralized Ecommerce Store</title>
- <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
- <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.4/web3.min.js"></script>
- 
- <script src="./index.js"></script>
+    <title>添加新商品 - 区块链拍卖商城</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.4/web3.min.js"></script>
+
+    <script src="./js/index.js"></script>
+    <style>
+        .sidebar {
+            background-color: #2c3e50;
+            padding: 25px;
+            height: 100vh;
+            border-right: 1px solid #34495e;
+            position: fixed;
+            width: 250px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 25px;
+            color: #ecf0f1;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            padding: 12px 20px;
+            background-color: #34495e;
+            color: #ecf0f1;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #3498db;
+            transform: translateX(5px);
+        }
+
+        .sidebar ul li a.active {
+            background-color: #3498db;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-content {
+            margin-left: 270px;
+            padding: 30px;
+            background-color: #fff;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .control-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.25);
+        }
+
+        .btn-submit {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .upload-preview {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .upload-preview img {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
- <div class="container">
-  <h1>List an item</h1>
-  <div class="container">
-   <div class="row">
-    <div style="display: none;" class="alert alert-success" id="msg"></div>
-    <form class="form-horizontal col-sm-5" id="add-item-to-store">
-     <div class="form-group">
-      <label for="product-name" class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-       <input type="text" name="product-name" class="form-control" id="product-name" placeholder="iPhone, Jeans, shoes etc" required="required"></input>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-description" class="col-sm-2 control-label">Description</label>
-      <div class="col-sm-10">
-       <textarea class="form-control" name="product-description" rows="8" id="product-description" placeholder="Enter detailed product description" required="required"></textarea>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-image" class="col-sm-2 control-label">Upload product photo</label>
-      <div class="col-sm-10">
-       <input type="file" name="product-image" class="form-control" id="product-image" required="required">
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-category" class="col-sm-2 control-label">Category</label>
-      <div class="col-sm-10">
-       <select class="form-control" name="product-category" id="product-category">
-        <option>Art</option>
-        <option>Books</option>
-        <option>Cameras</option>
-        <option>Cell Phones & Accessories</option>
-        <option>Clothing</option>
-        <option>Coins & Paper Money</option>
-        <option>Collectibles</option>
-        <option>Computers/Tablets & Networking</option>
-        <option>Consumer Electronics</option>
-        <option>Crafts</option>
-        <option>DVDs & Movies</option>
-        <option>Entertainment Memorabilia</option>
-        <option>Gift Cards & Coupons</option>
-        <option>Music</option>
-        <option>Musical Instruments & Gear</option>
-        <option>Pet Supplies</option>
-        <option>Pottery & Glass</option>
-        <option>Sporting Goods</option>
-        <option>Stamps</option>
-        <option>Tickets</option>
-        <option>Toys & Hobbies</option>
-        <option>Video Games</option>
-       </select>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-price" class="col-sm-2 control-label">Start Price</label>
-      <div class="col-sm-10">
-       <input type="text" class="form-control" name="product-price" id="product-price" required="required"></input>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-condition" class="col-sm-2 control-label">Product Condition</label>
-      <div class="col-sm-10">
-       <select class="form-control" name="product-condition" id="product-condition">
-        <option value="1">New</option>
-        <option value="2">Used</option>
-       </select>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-auction-start" class="col-sm-2 control-label">Auction Start Time</label>
-      <div class="col-sm-10">
-       <input type="datetime-local" class="form-control" name="product-auction-start" id="product-auction-start" required="required"></input>
-      </div>
-     </div>
-     <div class="form-group">
-      <label for="product-auction-end" class="col-sm-2 control-label">Auction Duration</label>
-      <div class="col-sm-5">
-       <select class="form-control" name="product-auction-end" id="product-auction-end">
-        <option value="1">1 </option>
-        <option value="3">3 </option>
-        <option value="5">5 </option>
-        <option value="7">7 </option>
-        <option value="10">10 </option>
-       </select>
-      </div>
-      <div class="col-sm-5">
-       <select class="form-control" name="product-auction-end-type" id="product-auction-end-type">
-        <option value="days">Days</option>
-        <option value="minutes">Minutes</option>
-       </select>
-      </div>
-     </div>
-     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-       <button type="submit" class="btn btn-primary">Add Product To Store</button>
-      </div>
-     </div>
-    </form>
-   </div>
-  </div>
- </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧导航条 -->
+            <div class="col-sm-2 sidebar">
+                <h3><i class="glyphicon glyphicon-th-list"></i> 导航菜单</h3>
+                <ul>
+                    <li><a href="index.html"><i class="glyphicon glyphicon-shopping-cart"></i> 商品购买</a></li>
+                    <li><a href="reveal.html"><i class="glyphicon glyphicon-eye-open"></i> 揭示阶段</a></li>
+                    <li><a href="finalize.html"><i class="glyphicon glyphicon-ok-circle"></i> 完成阶段</a></li>
+                    <li><a href="list-item.html" class="active"><i class="glyphicon glyphicon-plus"></i> 添加商品</a></li>
+                </ul>
+            </div>
+            <!-- 主内容区域 -->
+            <div class="col-sm-10 main-content">
+                <h1>添加新商品</h1>
+                <div class="form-container">
+                    <div class="row">
+                        <div style="display: none;" class="alert alert-success" id="msg"></div>
+                        <form class="form-horizontal" id="add-item-to-store">
+                            <div class="form-group">
+                                <label for="product-name" class="col-sm-3 control-label">商品名称</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="product-name" id="product-name" placeholder="请输入商品名称" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-description" class="col-sm-3 control-label">商品描述</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" name="product-description" id="product-description" placeholder="请输入商品详细描述" required="required"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-image" class="col-sm-3 control-label">商品图片</label>
+                                <div class="col-sm-9">
+                                    <input type="file" class="form-control" name="product-image" id="product-image" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-category" class="col-sm-3 control-label">商品类别</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="product-category" id="product-category" required="required">
+                                        <option value="">请选择类别</option>
+                                        <option value="艺术">艺术</option>
+                                        <option value="电子产品">电子产品</option>
+                                        <option value="时尚">时尚</option>
+                                        <option value="家居">家居</option>
+                                        <option value="运动">运动</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-price" class="col-sm-3 control-label">起拍价格 (ETH)</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="product-price" id="product-price" placeholder="请输入起拍价格" required="required" step="0.01">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-condition" class="col-sm-3 control-label">商品状况</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="product-condition" id="product-condition" required="required">
+                                        <option value="">请选择商品状况</option>
+                                        <option value="0">全新</option>
+                                        <option value="1">二手</option>
+                                        <option value="2">需要维修</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-auction-start" class="col-sm-3 control-label">拍卖开始时间</label>
+                                <div class="col-sm-9">
+                                    <input type="datetime-local" class="form-control" name="product-auction-start" id="product-auction-start" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">拍卖持续时间</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" name="product-auction-end" id="product-auction-end" 
+                                           placeholder="请输入数值" required="required" min="1" value="1">
+                                </div>
+                                <div class="col-sm-3">
+                                    <select class="form-control" name="product-auction-end-type" id="product-auction-end-type">
+                                        <option value="minutes">分钟</option>
+                                        <option value="days">天</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <button type="submit" class="btn btn-submit">发布商品</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 </body>
+
 </html>

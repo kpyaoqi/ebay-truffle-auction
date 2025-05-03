@@ -5,7 +5,7 @@ class Fun {
   constructor() {
     // 加载页面显示列表
     this.renderStore = function renderStore() {
-      this.renderProducts("product-list", {});
+      this.renderProducts("product-finalize-list", { productStatus: "finalize" });
     };
 
     // 
@@ -17,12 +17,12 @@ class Fun {
         data: filter,
         success: function (data) {
           // 更新商品总数显示
-          if (div === "product-list") {
+          if (div === "product-finalize-list") {
             $("#total-products").text(data.length);
           }
           
           if (data.length == 0) {
-            $("#" + div).html('No products found');
+            $("#" + div).html('未找到商品');
           }
           while (data.length > 0) {
             let chunks = data.splice(0, 3);  // 修改为3个一组
@@ -37,34 +37,6 @@ class Fun {
         }
       });
     }
-    // 添加商品图片到IPFS
-    this.saveImageOnIpfs = function saveImageOnIpfs(reader) {
-      return new Promise(function (resolve, reject) {
-        const buffer = Buffer.from(reader.result);
-        ipfs.add(buffer)
-          .then((response) => {
-            console.log(response);
-            resolve(response.path);
-          }).catch((err) => {
-            console.error(err);
-            reject(err);
-          });
-      });
-    };
-    // 添加商品描述到IPFS
-    this.saveTextBlobOnIpfs = function saveTextBlobOnIpfs(blob) {
-      return new Promise(function (resolve, reject) {
-        const descBuffer = Buffer.from(blob, 'utf-8');
-        ipfs.add(descBuffer)
-          .then((response) => {
-            console.log(response);
-            resolve(response.path);
-          }).catch((err) => {
-            console.error(err);
-            reject(err);
-          });
-      });
-    };
 
     // 显示结束时间
     this.displayEndHours = function displayEndHours(seconds) {
@@ -95,56 +67,14 @@ class Fun {
       }
     };
 
-    // 添加商品信息到数据库
-    this.saveProduct = function saveProduct(product) {
-      var data = {
-        blockchainId: product._productId, name: product._name, category: product._category,
-        ipfsImageHash: product._imageLink, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
-        auctionEndTime: product._auctionEndTime, price: product._startPrice, condition: product._productCondition,
-        productStatus: 0
-      };
-      var product_ = JSON.stringify(data);
-      $.ajax({
-        type: 'POST',
-        url: '/product/saveProduct',
-        contentType: 'application/json;charset=UTF-8',
-        data: product_
-      });
-    };
-
-    // Utf8Array转换Str
-    this.Utf8ArrayToStr = function Utf8ArrayToStr(array) {
-      var out, i, len, c;
-      var char2, char3;
-      out = "";
-      len = array.length;
-      i = 0;
-      while (i < len) {
-        c = array[i++];
-        switch (c >> 4) {
-          case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-            // 0xxxxxxx
-            out += String.fromCharCode(c);
-            break;
-          case 12: case 13:
-            // 110x xxxx 10xx xxxx
-            char2 = array[i++];
-            out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-            break;
-          case 14:
-            // 1110 xxxx 10xx xxxx 10xx xxxx
-            char2 = array[i++];
-            char3 = array[i++];
-            out += String.fromCharCode(((c & 0x0F) << 12) |
-              ((char2 & 0x3F) << 6) |
-              ((char3 & 0x3F) << 0));
-            break;
-        }
-      }
-      return out;
-    };
   }
 }
+
+// 在页面加载时创建实例并调用renderStore
+document.addEventListener('DOMContentLoaded', function() {
+  const funInstance = new Fun();
+  funInstance.renderStore();
+});
 
 module.exports = Fun;
 
@@ -191,35 +121,36 @@ function buildProduct(product) {
   let node = $("<div/>");
   node.addClass("col-sm-4");
   node.append(`
-    <div class="product-card">
-      <div class="product-image">
-        <div class="status-badge ${statusClass}">${statusText}</div>
+    <div class="product-card" style="margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: all 0.3s ease; overflow: hidden;">
+      <div class="product-image" style="position: relative; height: 200px; overflow: hidden;">
+        <div class="status-badge ${statusClass}" style="position: absolute; top: 10px; right: 10px; padding: 4px 10px; font-size: 12px; font-weight: bold; color: white; background: ${statusClass === 'status-active' ? '#4CAF50' : statusClass === 'status-reveal' ? '#FF9800' : '#F44336'}; border-radius: 0;">
+          ${statusText}
+        </div>
         <a href='product.html?product-id=${product.blockchainId}'>
-          <img src='http://localhost:9001/ipfs/${product.ipfsImageHash}' class='img-responsive'/>
+          <img src='http://localhost:9001/ipfs/${product.ipfsImageHash}' style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
         </a>
       </div>
-      <div class="product-info">
-        <h4 class="product-name">${product.productName}</h4>
-        <div class="product-meta">
-          <span class="category">
+      <div class="product-info" style="padding: 15px; background: white;">
+        <h4 class="product-name" style="margin: 0 0 8px 0; font-size: 16px; color: #333; font-weight: 600;">${product.productName}</h4>
+        <div class="product-meta" style="margin-bottom: 10px;">
+          <span class="category" style="font-size: 12px; color: #666;">
             <i class="glyphicon glyphicon-tag"></i> ${product.category}
           </span>
         </div>
-        <div class="price-tag">
-          <div class="price">
+        <div class="price-tag" style="margin-bottom: 12px;">
+          <div class="price" style="font-size: 18px; font-weight: bold; color: #2196F3;">
             <i class="glyphicon glyphicon-usd"></i> ${priceInEth}
-            <span class="price-eth">ETH</span>
+            <span class="price-eth" style="font-size: 12px; color: #666;">ETH</span>
           </div>
         </div>
-        <div class="auction-time">
-          <div class="time-remaining">
+        <div class="auction-time" style="font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
+          <div class="time-remaining" style="margin-bottom: 5px;">
             <i class="glyphicon glyphicon-time"></i> 
-            剩余时间: ${timeDisplay}
+            剩余时间: <strong>${timeDisplay}</strong>
           </div>
-          <div class="auction-dates">
-            <small>开始: ${new Date(product.auctionStartTime * 1000).toLocaleString()}</small>
-            <br>
-            <small>结束: ${new Date(product.auctionEndTime * 1000).toLocaleString()}</small>
+          <div class="auction-dates" style="font-size: 11px;">
+            <div style="margin-bottom: 3px;">开始: ${new Date(product.auctionStartTime * 1000).toLocaleString()}</div>
+            <div>结束: ${new Date(product.auctionEndTime * 1000).toLocaleString()}</div>
           </div>
         </div>
       </div>

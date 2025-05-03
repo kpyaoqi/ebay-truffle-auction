@@ -47,7 +47,7 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-    // 托管
+    // 完成拍卖
     $("#finalize-auction").submit(function (event) {
         $("#msg").hide();
         let productId = $("#product-id").val();
@@ -55,19 +55,19 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-    // 释放给卖家
+    // 释放资金给卖家
     $("#release-funds").click(function () {
         let productId = new URLSearchParams(window.location.search).get('product-id');
-        $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+        $("#msg").html("您的交易已提交，请等待几秒钟确认").show();
         AppOfWeb3.releaseFunds(productId);
     });
 
-    // 回退给买家
+    // 退款给买家
     $("#refund-funds").click(function () {
         let productId = new URLSearchParams(window.location.search).get('product-id');
-        $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+        $("#msg").html("您的交易已提交，请等待几秒钟确认").show();
         AppOfWeb3.refundFunds(productId);
-        alert("refund the funds!");
+        alert("资金已退款！");
     });
 });
 

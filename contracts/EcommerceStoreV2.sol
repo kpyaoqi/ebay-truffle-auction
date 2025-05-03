@@ -12,7 +12,8 @@ contract EcommerceStoreV2 {
 
     enum ProductCondition {
         New,
-        Used
+        Used,
+        Repair
     }
 
     // 商品计数器
