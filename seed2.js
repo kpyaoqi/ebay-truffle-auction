@@ -1,5 +1,5 @@
 EcommerceStore = artifacts.require("./EcommerceStore.sol");
-UserSore = artifacts.require("./UserSore.sol");
+UserSore = artifacts.require("./User.sol");
 module.exports = function (callback) {
     current_time = Math.round(new Date() / 1000);
     UserSore.deployed().then(function (i) {
