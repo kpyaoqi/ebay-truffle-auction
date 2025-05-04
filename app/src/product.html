@@ -111,6 +111,91 @@
       background: #fff;
       border-radius: 4px;
     }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    .user-name {
+      color: #fff;
+      font-size: 14px;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-popup {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      z-index: 1000;
+    }
+
+    .user-popup.show {
+      display: block;
+    }
+
+    .user-popup-info {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 10px;
+    }
+
+    .user-popup-info p {
+      margin: 5px 0;
+      color: #333;
+      font-size: 13px;
+    }
+
+    .user-popup-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .user-popup-actions button {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .edit-btn {
+      background: #3498db;
+      color: white;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #2980b9;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
   </style>
 </head>
 
@@ -162,8 +247,8 @@
                   <h4>出价</h4>
                   <div class="form-group">
                     <label for="bid-amount">输入出价金额</label>
-                    <input type="text" class="form-control" name="bid-amount" id="bid-amount"
-                      placeholder="金额 > 起拍价" required="required">
+                    <input type="text" class="form-control" name="bid-amount" id="bid-amount" placeholder="金额 > 起拍价"
+                      required="required">
                   </div>
                   <div class="form-group">
                     <label for="bid-send-amount">输入发送金额</label>
@@ -172,8 +257,8 @@
                   </div>
                   <div class="form-group">
                     <label for="secret-text">输入秘密文本</label>
-                    <input type="text" class="form-control" name="secret-text" id="secret-text"
-                      placeholder="任意随机文本" required="required">
+                    <input type="text" class="form-control" name="secret-text" id="secret-text" placeholder="任意随机文本"
+                      required="required">
                   </div>
                   <input type="hidden" name="product-id" id="product-id" />
                   <button type="submit" class="btn btn-primary">提交出价</button>
@@ -222,126 +307,127 @@
 </html>
 
 <style>
-    /* 新增全局样式 */
-    :root {
-        --primary-color: #3498db;
-        --secondary-color: #2c3e50;
-        --accent-color: #e74c3c;
-        --light-bg: #f8f9fa;
-        --dark-text: #2c3e50;
-        --light-text: #ecf0f1;
-    }
-    
-    /* 主内容区优化 */
+  /* 新增全局样式 */
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --light-bg: #f8f9fa;
+    --dark-text: #2c3e50;
+    --light-text: #ecf0f1;
+  }
+
+  /* 主内容区优化 */
+  .main-content {
+    background-color: #f5f7fa;
+    padding: 40px;
+  }
+
+  /* 商品详情卡片 */
+  #product-details {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    margin-top: 20px;
+  }
+
+  /* 图片区域美化 */
+  #product-image {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  #product-image img {
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  /* 价格显示优化 */
+  #product-price {
+    color: var(--accent-color);
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  /* 表单样式优化 */
+  .bid-form,
+  #revealing {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+  }
+
+  .form-control {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 12px 25px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+
+  /* 商品描述区域 */
+  #product-desc {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 30px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  /* 拍卖状态提示 */
+  #product-status {
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
+    font-weight: 500;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 768px) {
     .main-content {
-        background-color: #f5f7fa;
-        padding: 40px;
+      margin-left: 0;
+      padding: 20px;
     }
-    
-    /* 商品详情卡片 */
-    #product-details {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        padding: 30px;
-        margin-top: 20px;
+
+    .sidebar {
+      width: 100%;
+      position: relative;
+      height: auto;
     }
-    
-    /* 图片区域美化 */
-    #product-image {
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    #product-image img {
-        max-height: 400px;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-    
-    /* 价格显示优化 */
-    #product-price {
-        color: var(--accent-color);
-        font-size: 28px;
-        font-weight: bold;
-    }
-    
-    /* 表单样式优化 */
-    .bid-form, #revealing {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-        margin-bottom: 25px;
-    }
-    
-    .form-control {
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        padding: 12px 15px;
-    }
-    
-    .btn-primary {
-        background-color: var(--primary-color);
-        border: none;
-        padding: 12px 25px;
-        font-weight: 600;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-        background-color: #2980b9;
-        transform: translateY(-2px);
-    }
-    
-    /* 商品描述区域 */
-    #product-desc {
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        margin-top: 30px;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-    }
-    
-    /* 拍卖状态提示 */
-    #product-status {
-        padding: 15px;
-        border-radius: 6px;
-        margin: 20px 0;
-        font-weight: 500;
-    }
-    
-    /* 响应式调整 */
-    @media (max-width: 768px) {
-        .main-content {
-            margin-left: 0;
-            padding: 20px;
-        }
-        
-        .sidebar {
-            width: 100%;
-            position: relative;
-            height: auto;
-        }
-    }
+  }
 </style>
 <script>
   // 用户信息弹出框显示/隐藏
-  document.querySelector('.user-info').addEventListener('mouseenter', function() {
-      document.getElementById('userPopup').classList.add('show');
+  document.querySelector('.user-info').addEventListener('mouseenter', function () {
+    document.getElementById('userPopup').classList.add('show');
   });
 
-  document.querySelector('.user-info').addEventListener('mouseleave', function() {
-      document.getElementById('userPopup').classList.remove('show');
+  document.querySelector('.user-info').addEventListener('mouseleave', function () {
+    document.getElementById('userPopup').classList.remove('show');
   });
 
   // 退出登录处理
   function handleLogout() {
-      localStorage.removeItem('userLoggedIn');
-      localStorage.removeItem('userAddress');
-      window.location.href = 'login.html';
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('userAddress');
+    window.location.href = 'login.html';
   }
 </script>
