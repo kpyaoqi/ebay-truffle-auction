@@ -1,8 +1,8 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x65991e1FD05eC04E8753bA1FE6aAfB97c7F6E494",
-    "txHash": "0x5239465b899449fd9c2a218f0f30e4dd04f25b5ceae0637e0282e5376d02ef6c"
+    "address": "0x455873608AC5fd1b040a36C97dCEDB9EA55cF0f6",
+    "txHash": "0xf9a9ffbc6f6d6abcce784c6bfead7e12ddb5acc8ecdffccd0f4472f1eb319ff6"
   },
   "proxies": [
     {
@@ -53,6 +53,36 @@
     {
       "address": "0xC09Ed133050f2a08747413357EC3c25aD468eEe9",
       "txHash": "0x9278af971bb995281b9cf4024ff0b30eb58de6e3fcd2da011a30e755771c31c8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x23e80723C1400fA7c2054A53F273Df55943597DF",
+      "txHash": "0x698dc70ead64e8938f978c028419413d21df0bb697d094664bd87e963b711bcb",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x1CD356f8D85Bc54dB608B61838D89f3bE1c9dF2B",
+      "txHash": "0x6cb21a893f4d2a200d480cf84511f397ad4b8c9995000e64b7a8bf66fb923af7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x8f7fd8A593FDf366ba7e3064bBa19F80C36e1AD5",
+      "txHash": "0x81c8d220f4d259a84bdb29693c3cbdbd9a947ff5adfb848f2d55cd29fb660dee",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5AD5e8574b5d05cFC28a17C004D8969045590009",
+      "txHash": "0x2d85b3d5275a8f7af8049a06121630adc15474058458fb9753c03438bb916f1b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x395B19A5b2DD13E9cd54DA12B566BdC4f1DB06a3",
+      "txHash": "0xb8e3ae8ee6e505dc2b248a334d2bf2ab2453b58ee40cd48c40e140389232cbfd",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x410aaC3c8BA683fB94b2EeC81f341c5427433b03",
+      "txHash": "0xdb1e4c9d6d339580b45990d140314a66bbe3164b0b23f8c06639c6144a2f7880",
       "kind": "transparent"
     }
   ],
@@ -556,8 +586,8 @@
       }
     },
     "1c05224f11acd2bf163388ff35680c8d54a0a097d02e3b180619b633058e46f6": {
-      "address": "0xF90a3E6aDD38e4f5d4473F3dfa7eE928DcE4d7f4",
-      "txHash": "0x8a20d33d935b514d5a7526daeae3424063761dc8185802b93f6e7cc5ef71bc51",
+      "address": "0x41FB9cc3839D9fb0F56Aa45bcCa399A69c2E3F40",
+      "txHash": "0x61d54f20f653407e9d255dc4cdecad8a85f2a315c22687b39a7ccba2a4582fd8",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -723,8 +753,8 @@
       }
     },
     "667b35b13fafae4c9867cde1626a9a00d14f998cc83aab7166470931dbb52f9b": {
-      "address": "0xE6f0348B48fceE44365Bf2268BbDa1aEBd98e816",
-      "txHash": "0x551e8518580331831ae766102df7abc90db3f715c0db8019bef703c15147fc42",
+      "address": "0x6E34cA1f14c8AeaB91fb5a08DC03b7cb23480508",
+      "txHash": "0x112f059c2d68ed22ece1cda6b3bfab6de544a620b83e29aab6d063d963381b83",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -885,6 +915,200 @@
           },
           "t_mapping(t_uint256,t_address)": {
             "label": "mapping(uint256 => address)"
+          }
+        }
+      }
+    },
+    "a11b1eaa5ea31b24ec6f093275844dcd8714fb00852d0f8fba5dfa4bd37d024d": {
+      "address": "0xbfCd0DA11953bc69b328FDA94887dfBeA0aA5582",
+      "txHash": "0x26162efd2442a6f4c12e6f9b4d4d1b7e6326fb4170ff786fc8eaeb5469ce094e",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "User",
+            "label": "users",
+            "type": "t_mapping(t_address,t_struct(UserInfo)2174_storage)",
+            "src": "..\\project:\\contracts\\User.sol:15"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(UserInfo)2174_storage)": {
+            "label": "mapping(address => struct User.UserInfo)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(UserInfo)2174_storage": {
+            "label": "struct User.UserInfo",
+            "members": [
+              {
+                "label": "username",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "gender",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "shippingAddress",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "phone",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "avatar",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "isSeller",
+                "type": "t_bool"
+              },
+              {
+                "label": "isRegistered",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "b41bbf13ef67b4199d0b07160f1c9014bc221ffd759ef7cec9cfadb6d52d55e6": {
+      "address": "0x193506546df19C7E4184fc5D0E1867b1aA671a35",
+      "txHash": "0x40d8e0743f4b645e7ef79a2d44d1b9ae1874820ee623ce31b0759c38473c3313",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "User",
+            "label": "users",
+            "type": "t_mapping(t_address,t_struct(UserInfo)2176_storage)",
+            "src": "..\\project:\\contracts\\User.sol:16"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(UserInfo)2176_storage)": {
+            "label": "mapping(address => struct User.UserInfo)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(UserInfo)2176_storage": {
+            "label": "struct User.UserInfo",
+            "members": [
+              {
+                "label": "username",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "gender",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "shippingAddress",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "phone",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "avatar",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "password",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "isSeller",
+                "type": "t_bool"
+              },
+              {
+                "label": "isRegistered",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "779e996c8a942065334c113af2835bc43cef13804af1b77eb216981c654e1244": {
+      "address": "0x0A7b3f84145dFC83F6c95116804cccfff5664F7f",
+      "txHash": "0x2a8707059d0922f870182b7c744452a5d6930656205bb102a40cd159133693fa",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "contract": "User",
+            "label": "users",
+            "type": "t_mapping(t_address,t_struct(UserInfo)2176_storage)",
+            "src": "..\\project:\\contracts\\User.sol:16"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(UserInfo)2176_storage)": {
+            "label": "mapping(address => struct User.UserInfo)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(UserInfo)2176_storage": {
+            "label": "struct User.UserInfo",
+            "members": [
+              {
+                "label": "username",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "gender",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "shippingAddress",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "phone",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "avatar",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "password",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "isSeller",
+                "type": "t_bool"
+              },
+              {
+                "label": "isRegistered",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_bool": {
+            "label": "bool"
           }
         }
       }

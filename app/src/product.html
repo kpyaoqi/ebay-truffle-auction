@@ -119,6 +119,22 @@
     <div class="row">
       <!-- 左侧导航条 -->
       <div class="col-sm-2 sidebar">
+        <div class="user-info">
+          <img src="images/default.png" alt="用户头像" class="user-avatar" id="userAvatar">
+          <p class="user-name" id="userDisplayName">未登录</p>
+          <div class="user-popup" id="userPopup">
+            <div class="user-popup-info">
+              <p>用户名：<span id="popupUsername">-</span></p>
+              <p>性别：<span id="popupGender">-</span></p>
+              <p>电话：<span id="popupPhone">-</span></p>
+              <p>地址：<span id="popupAddress">-</span></p>
+            </div>
+            <div class="user-popup-actions">
+              <button class="edit-btn" onclick="window.location.href='edit-profile.html'">修改信息</button>
+              <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+            </div>
+          </div>
+        </div>
         <h3><i class="glyphicon glyphicon-th-list"></i> 导航菜单</h3>
         <ul>
           <li><a href="index.html"><i class="glyphicon glyphicon-shopping-cart"></i> 商品购买</a></li>
@@ -312,3 +328,20 @@
         }
     }
 </style>
+<script>
+  // 用户信息弹出框显示/隐藏
+  document.querySelector('.user-info').addEventListener('mouseenter', function() {
+      document.getElementById('userPopup').classList.add('show');
+  });
+
+  document.querySelector('.user-info').addEventListener('mouseleave', function() {
+      document.getElementById('userPopup').classList.remove('show');
+  });
+
+  // 退出登录处理
+  function handleLogout() {
+      localStorage.removeItem('userLoggedIn');
+      localStorage.removeItem('userAddress');
+      window.location.href = 'login.html';
+  }
+</script>

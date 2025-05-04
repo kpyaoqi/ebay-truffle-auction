@@ -1,8 +1,7 @@
 const Web3 = require("web3");
 const { ethers } = require("ethers");
 import { AppOfWeb3 } from './ofweb3.js';
-import { AppOfEthers } from './ofetherjs.js';
-import web3 from 'web3';
+import { AppOfEthers } from './ofetherjs.js';import {common} from './common.js';
 $(document).ready(function () {
     var reader;
     // 照片选择
@@ -77,6 +76,8 @@ window.web3.AppOfEthers = AppOfEthers;
 
 // web3初始化
 window.addEventListener("load", function () {
+    common.displayUserInfo();
+
     if (window.ethereum) {
         AppOfWeb3.web3 = new Web3(window.ethereum);
         AppOfEthers.provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -90,4 +91,6 @@ window.addEventListener("load", function () {
     AppOfWeb3.start();
     AppOfEthers.start();
 });
+
+
 

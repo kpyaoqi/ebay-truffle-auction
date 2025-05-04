@@ -1,92 +1,93 @@
 
-import web3 from 'web3';
-
+const Web3 = require("web3");
+import {common} from './common.js';
 $(document).ready(function () {
-    // 分类筛选点击事件
-    $('.category-filter button').click(function () {
-        $('.category-filter button').removeClass('active');
-        $(this).addClass('active');
+  // 分类筛选点击事件
+  $('.category-filter button').click(function () {
+    $('.category-filter button').removeClass('active');
+    $(this).addClass('active');
 
-        const category = $(this).data('category');
-        loadProductsByCategory(category);
-    });
+    const category = $(this).data('category');
+    loadProductsByCategory(category);
+  });
 
-    // 初始加载全部商品
-    loadProductsByCategory('all');
+  // 初始加载全部商品
+  loadProductsByCategory('all');
+  common.displayUserInfo();
 });
 
 function loadProductsByCategory(category) {
-    $('#product-list').empty();
-    $.ajax({
-        url: '/product/productsByCategory',
-        method: 'GET',
-        data: { category: category },
-        success: function (data) {
-            // 更新商品总数显示
-            if ("product-list" === "product-list") {
-                $("#total-products").text(data.length);
-            }
+  $('#product-list').empty();
+  $.ajax({
+    url: '/product/productsByCategory',
+    method: 'GET',
+    data: { category: category },
+    success: function (data) {
+      // 更新商品总数显示
+      if ("product-list" === "product-list") {
+        $("#total-products").text(data.length);
+      }
 
-            if (data.length == 0) {
-                $("#" + "product-list").html('未找到商品');
-            }
-            while (data.length > 0) {
-                let chunks = data.splice(0, 3);  // 修改为3个一组
-                let row = $("<div/>");
-                row.addClass("row");
-                chunks.forEach(value => {
-                    let node = buildProduct(value); // 通过实例调用方法
-                    row.append(node);
-                });
-                $("#" + "product-list").append(row);
-            }
-        }
-    });
+      if (data.length == 0) {
+        $("#" + "product-list").html('未找到商品');
+      }
+      while (data.length > 0) {
+        let chunks = data.splice(0, 3);  // 修改为3个一组
+        let row = $("<div/>");
+        row.addClass("row");
+        chunks.forEach(value => {
+          let node = buildProduct(value); // 通过实例调用方法
+          row.append(node);
+        });
+        $("#" + "product-list").append(row);
+      }
+    }
+  });
 }
 
 
 function buildProduct(product) {
-    // 计算拍卖状态
-    const current_time = Math.round(new Date() / 1000);
-    const timeRemaining = product.auctionEndTime - current_time;
-    let statusClass = '';
-    let statusText = '';
+  // 计算拍卖状态
+  const current_time = Math.round(new Date() / 1000);
+  const timeRemaining = product.auctionEndTime - current_time;
+  let statusClass = '';
+  let statusText = '';
 
-    if (timeRemaining <= 0) {
-        statusClass = 'status-finalize';
-        statusText = '已结束';
-    } else if (timeRemaining < 3600) { // 小于1小时
-        statusClass = 'status-reveal status-urgent';
-        statusText = '即将结束';
+  if (timeRemaining <= 0) {
+    statusClass = 'status-finalize';
+    statusText = '已结束';
+  } else if (timeRemaining < 3600) { // 小于1小时
+    statusClass = 'status-reveal status-urgent';
+    statusText = '即将结束';
+  } else {
+    statusClass = 'status-active';
+    statusText = '进行中';
+  }
+
+  // 价格转换（从Wei到ETH）
+  const priceInEth = web3.utils.fromWei(product.price, 'ether');
+
+  // 计算剩余时间显示
+  let timeDisplay = '';
+  if (timeRemaining > 0) {
+    const days = Math.floor(timeRemaining / (24 * 60 * 60));
+    const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
+
+    if (days > 0) {
+      timeDisplay = `${days}天${hours}小时`;
+    } else if (hours > 0) {
+      timeDisplay = `${hours}小时${minutes}分钟`;
     } else {
-        statusClass = 'status-active';
-        statusText = '进行中';
+      timeDisplay = `${minutes}分钟`;
     }
+  } else {
+    timeDisplay = '已结束';
+  }
 
-    // 价格转换（从Wei到ETH）
-    const priceInEth = web3.utils.fromWei(product.price, 'ether');
-
-    // 计算剩余时间显示
-    let timeDisplay = '';
-    if (timeRemaining > 0) {
-        const days = Math.floor(timeRemaining / (24 * 60 * 60));
-        const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
-        const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
-
-        if (days > 0) {
-            timeDisplay = `${days}天${hours}小时`;
-        } else if (hours > 0) {
-            timeDisplay = `${hours}小时${minutes}分钟`;
-        } else {
-            timeDisplay = `${minutes}分钟`;
-        }
-    } else {
-        timeDisplay = '已结束';
-    }
-
-    let node = $("<div/>");
-    node.addClass("col-sm-4");
-    node.append(`
+  let node = $("<div/>");
+  node.addClass("col-sm-4");
+  node.append(`
       <div class="product-card">
         <div class="product-image">
           <div class="status-badge ${statusClass}">${statusText}</div>
@@ -121,5 +122,7 @@ function buildProduct(product) {
         </div>
       </div>
     `);
-    return node;
+  return node;
 }
+
+

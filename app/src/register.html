@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.15) 75%, rgba(255,255,255,0.15)),
+                linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.15) 75%, rgba(255,255,255,0.15));
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            animation: backgroundMove 30s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-60px) translateY(-60px); }
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(4px 4px at 100px 100px, #ffffff 50%, transparent 50%),
+                radial-gradient(4px 4px at 200px 200px, #ffffff 50%, transparent 50%),
+                radial-gradient(6px 6px at 300px 300px, #ffffff 50%, transparent 50%),
+                radial-gradient(3px 3px at 400px 400px, #ffffff 50%, transparent 50%),
+                radial-gradient(5px 5px at 500px 500px, #ffffff 50%, transparent 50%);
+            background-size: 600px 600px;
+            animation: twinkle 4s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.3; }
+        }
+
+        .container {
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+
+        .register-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        .avatar-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .avatar-input {
+            flex: 1;
+        }
+        #avatarPreview {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            width: 100px;
+            margin-bottom: 0;
+            margin-right: 15px;
+            color: #495057;
+            font-weight: 500;
+        }
+        .form-group .form-control,
+        .form-group .radio-group,
+        .form-group .avatar-container {
+            flex: 1;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+        }
+        .btn {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: #28a745;
+            border: none;
+        }
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+        .form-check-input {
+            margin-top: 0.2rem;
+        }
+        .form-text {
+            margin-top: 5px;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .form-group label {
+                width: 100%;
+            }
+            .avatar-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <div class="alert alert-info text-center mb-4" id="metamaskAddress">
+                <strong>当前MetaMask地址：</strong>
+                <span id="currentAddress">未连接</span>
+            </div>
+            
+            <h2 class="text-center mb-4">用户注册</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="username">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>性别</label>
+                            <div class="radio-group">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="male" name="gender" value="male" checked>
+                                    <label class="form-check-label" for="male">男</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="female" name="gender" value="female">
+                                    <label class="form-check-label" for="female">女</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shippingAddress">收货地址</label>
+                            <textarea class="form-control" id="shippingAddress" rows="1" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">电话号码</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avatar">头像</label>
+                            <div class="avatar-container">
+                                <div class="avatar-input">
+                                    <input type="file" class="form-control-file" id="avatar" accept="image/*">
+                                    <small class="form-text text-muted">如果不上传，将使用默认头像</small>
+                                </div>
+                                <img id="avatarPreview" src="images/default.png" alt="头像预览">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">确认密码</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>用户类型</label>
+                            <div class="radio-group">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="normalUser" name="userType" value="normal" checked>
+                                    <label class="form-check-label" for="normalUser">普通用户</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="seller" name="userType" value="seller">
+                                    <label class="form-check-label" for="seller">商家</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">注册</button>
+                                <button type="button" class="btn btn-success" onclick="window.location.href='login.html'">已有账号？去登录</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>
+<style>
+    .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .button-group .btn {
+        flex: 1;
+        margin: 0;
+    }
+</style>
+</html>

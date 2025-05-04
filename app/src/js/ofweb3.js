@@ -1,5 +1,6 @@
 import Fun from './function.js';
 import ecommerce_store_artifacts from '../../../build/contracts/EcommerceStore.json';
+import user_artifacts from '../../../build/contracts/User.json';
 const { create } = require('ipfs-http-client');
 const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
 
@@ -20,6 +21,14 @@ export const AppOfWeb3 = {
         ecommerce_store_artifacts.abi,
         deployedNetwork.address,
       );
+
+      // 初始化User合约
+      const userNetwork = user_artifacts.networks[networkId];
+      this.User = new web3.eth.Contract(
+        user_artifacts.abi,
+        userNetwork.address,
+      );
+
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];

@@ -1,5 +1,5 @@
 const { create } = require('ipfs-http-client');
-const web3 = require('web3');
+const web3 = require('web3');import {common} from './common.js';
 const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
 class Fun {
   constructor() {
@@ -66,6 +66,7 @@ class Fun {
         return "拍卖将在" + remaining_seconds + "秒后结束";
       }
     };
+    common.displayUserInfo();
 
   }
 }
@@ -76,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
   funInstance.renderStore();
 });
 
-module.exports = Fun;
 
 // 商品列表样式
 function buildProduct(product) {

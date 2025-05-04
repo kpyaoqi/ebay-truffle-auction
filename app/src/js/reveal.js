@@ -1,8 +1,10 @@
 const { create } = require('ipfs-http-client');
-const web3 = require('web3');
+const web3 = require('web3');import {common} from './common.js';
 const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
 class Fun {
   constructor() {
+    common.displayUserInfo();
+
     // 加载页面显示列表
     this.renderStore = function renderStore() {
       this.renderProducts("product-reveal-list", { productStatus: "reveal" });
@@ -150,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
   funInstance.renderStore();
 });
 
-module.exports = Fun;
+
 
 // 商品列表样式
 function buildProduct(product) {
