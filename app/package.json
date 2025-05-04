@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server"
+  },
+  "devDependencies": {
+    "@openzeppelin/truffle-upgrades": "^1.17.0",
+    "copy-webpack-plugin": "^5.0.5",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.20.12",
+    "ethers": "^5.4.0",
+    "ipfs-http-client": "^50.1.2",
+    "web3": "^1.2.4"
+  }
+}
